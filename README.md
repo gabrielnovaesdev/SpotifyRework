@@ -2,11 +2,13 @@
 
 # 🎵 Clone de Interface do Spotify
 
-### Recriação da landing page do Spotify — front-end com HTML, CSS e Bootstrap
+### Recriação da landing page do Spotify Premium — React, TypeScript, Tailwind CSS e GSAP
 
-[![HTML5](https://img.shields.io/badge/HTML5-59%25-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-37.3%25-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-3-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/docs/3.4/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![GSAP](https://img.shields.io/badge/GSAP-ScrollTrigger-0AE448?style=flat-square&logo=greensock&logoColor=black)](https://gsap.com/)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev/)
 [![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?style=flat-square&logo=github)](https://gabrielnovaesdev.github.io/Clone-de-Interface-do-Spotify/)
 [![Uso](https://img.shields.io/badge/Uso-educacional-green?style=flat-square)](#-aviso-legal)
 
@@ -18,20 +20,22 @@
 
 ## 📋 Sobre o Projeto
 
-O **Clone de Interface do Spotify** é uma recriação da landing page do Spotify, desenvolvida com HTML5, CSS e o framework Bootstrap. O projeto reproduz a estrutura visual da plataforma — incluindo navbar, hero section, cards de funcionalidades e rodapé completo — com foco em design responsivo e boas práticas de desenvolvimento front-end.
-
-Desenvolvido como projeto de aprendizado: o layout e o estilo foram escritos à mão em HTML e CSS, e o Bootstrap entra com o grid responsivo e o menu que recolhe no celular.
+O **Clone de Interface do Spotify** recria a landing page do Spotify Premium. A versão **1.1** reescreve o projeto (antes em HTML + Bootstrap 3) com uma stack atual e animações de scroll no estilo dos sites de produto modernos.
 
 ---
 
 ## ✨ Funcionalidades
 
-- 🎨 **Layout fiel ao Spotify** — navbar, hero, seções de conteúdo e footer
-- 📱 **Design responsivo** — adaptado para diferentes tamanhos de tela
-- 🖼️ **Seção de funcionalidades** — exibição de músicas, playlists e lançamentos
-- 🔍 **Seção "É fácil!"** — buscar, navegar e descobrir músicas
-- 🔗 **Navegação funcional** — menu com links e botões de ação
-- 📲 **Footer completo** — links de company, comunidades e links úteis com ícones de redes sociais
+- 🧈 **Smooth scroll** com Lenis, sincronizado ao ticker do GSAP
+- 🎬 **Hero animado** — título revelado letra a letra (SplitText), capas de álbum com parallax de mouse e de scroll
+- 🎠 **Carrossel infinito** de playlists que acelera e inclina conforme a velocidade do scroll
+- 📌 **Seção "É fácil" fixa (pin)** — as telas do app trocam sincronizadas ao scroll, com snap entre etapas
+- ✍️ **Texto que acende palavra por palavra** conforme a rolagem (scrub)
+- 💳 **Cards de planos** com entrada em 3D e inclinação ao passar o mouse
+- 💡 **Cards de benefícios** com spotlight que segue o cursor
+- ❓ **FAQ em acordeão** com animação de altura via CSS grid
+- 🟢 **CTA final** que se expande com clip-path no scroll e botão magnético
+- 📱 **Responsivo** e com suporte a `prefers-reduced-motion`
 
 ---
 
@@ -39,43 +43,40 @@ Desenvolvido como projeto de aprendizado: o layout e o estilo foram escritos à 
 
 | Tecnologia | Uso |
 |---|---|
-| HTML5 | Estruturação semântica das páginas |
-| CSS3 | Estilização, layout e responsividade |
-| JavaScript (Bootstrap + jQuery) | Menu recolhível da navbar em telas pequenas |
-| Bootstrap | Componentes e grid system |
-| GitHub Pages | Hospedagem gratuita do projeto |
+| React 19 + TypeScript | Componentes e tipagem |
+| Vite 7 | Dev server e build |
+| Tailwind CSS 4 | Estilização e design tokens |
+| GSAP 3 (ScrollTrigger, SplitText) | Animações e scroll animations |
+| Lenis | Smooth scroll |
 
 ---
 
 ## 🏗️ Estrutura do Projeto
 
 ```
-Clone-de-Interface-do-Spotify/
-├── index.html        # Página principal
-├── estilo.css        # Estilos customizados
-├── bootstrap/        # Framework CSS
-└── imagens/          # Imagens e ícones do projeto
+├── index.html
+├── public/imagens/        # Imagens e ícones
+└── src/
+    ├── App.tsx            # Montagem das seções
+    ├── lib.ts             # Registro dos plugins GSAP e helpers
+    ├── hooks/useLenis.ts  # Smooth scroll
+    └── components/        # Nav, Hero, Marquee, Benefits, Showcase, Plans, Faq...
 ```
 
 ---
 
 ## ⚙️ Como Rodar Localmente
 
-Não é necessário instalar nenhuma dependência — o projeto roda direto no navegador.
+Requer Node.js 20+.
 
 ```bash
-# Clone o repositório
-git clone https://github.com/gabrielnovaesdev/Clone-de-Interface-do-Spotify.git
-
-# Acesse a pasta
-cd Clone-de-Interface-do-Spotify
-
-# Abra no navegador
-start index.html   # Windows
-open index.html    # Mac
+git clone https://github.com/gabrielnovaesdev/SpotifyRework.git
+cd SpotifyRework
+npm install
+npm run dev        # abre em http://localhost:5173
 ```
 
-Ou acesse diretamente a **[demo ao vivo](https://gabrielnovaesdev.github.io/Clone-de-Interface-do-Spotify/)**.
+Para gerar a versão de produção: `npm run build` (saída em `dist/`) e `npm run preview` para testá-la.
 
 ---
 
