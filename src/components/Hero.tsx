@@ -1,68 +1,110 @@
-import { useRef } from 'react'
-import { gsap, SplitText, useGSAP, img } from '../lib'
-import { IconArrow } from './Icons'
+import { useEffect, useRef, useState } from 'react'
+import { gsap, SplitText, useGSAP } from '../lib'
+import { heroVideo, logoMask } from '../media'
 
-const covers = [
-  { src: 'img1.jpg', cls: 'left-[-6%] top-[8%] w-[38%] [--r:-10deg]', depth: 1.4 },
-  { src: 'img2.jpg', cls: 'right-[-4%] top-[2%] w-[30%] [--r:8deg]', depth: 0.8 },
-  { src: 'img3.jpg', cls: 'left-[-2%] bottom-[6%] w-[30%] [--r:6deg]', depth: 1.1 },
-  { src: 'img4.jpg', cls: 'right-[-8%] bottom-[14%] w-[36%] [--r:-6deg]', depth: 1.6 },
-]
+const keywords = ['música', 'artistas', 'fãs', 'eventos ao vivo', 'vídeos']
 
+/**
+ * Hero no estilo da página oficial: o vídeo fica atrás de uma camada escura
+ * com o logo do Spotify vazado (mask-composite: exclude). Ao rolar, o logo
+ * cresce até tomar a tela e revela o vídeo inteiro; depois entra o texto
+ * de apresentação palavra por palavra.
+ */
 export default function Hero() {
   const root = useRef<HTMLElement>(null)
+  const video = useRef<HTMLVideoElement>(null)
+  const [src, setSrc] = useState<string | null>(null)
+  const [playing, setPlaying] = useState(true)
+
+  // Vídeo vertical no celular e horizontal no desktop
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const pick = () => setSrc(mq.matches ? heroVideo.desktop : heroVideo.mobile)
+    pick()
+    mq.addEventListener('change', pick)
+    return () => mq.removeEventListener('change', pick)
+  }, [])
+
+  // Palavra que troca no fim do título. Estado do React + transição CSS:
+  // cada palavra sabe sozinha onde ficar, então nunca há duas no mesmo lugar.
+  const [kw, setKw] = useState(0)
+  const [prevKw, setPrevKw] = useState<number | null>(null)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => {
+      setKw((i) => {
+        setPrevKw(i)
+        return (i + 1) % keywords.length
+      })
+    }, 2300)
+    return () => window.clearInterval(id)
+  }, [])
+
+  const togglePlay = () => {
+    const v = video.current
+    if (!v) return
+    if (v.paused) {
+      v.play()
+      setPlaying(true)
+    } else {
+      v.pause()
+      setPlaying(false)
+    }
+  }
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia()
+
       mm.add(
-        { motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width: 1024px)' },
+        { motion: '(prefers-reduced-motion: no-preference)', desktop: '(min-width: 768px)' },
         (ctx) => {
           const { motion, desktop } = ctx.conditions as { motion: boolean; desktop: boolean }
+          const mask = root.current!.querySelector<HTMLElement>('.hero-mask')!
+
+          // Posição e tamanho iniciais do logo vazado
+          const startSize = () => (desktop ? Math.min(window.innerWidth * 0.5, window.innerHeight * 0.86) : window.innerWidth * 0.82)
+          const endSize = () => Math.max(window.innerWidth, window.innerHeight) * 3.4
+          // Estado da máscara animado via objeto (mais confiável que tweenar variáveis CSS direto)
+          const s = { size: startSize(), mx: desktop ? 92 : 50, my: desktop ? 50 : 24 }
+          const apply = () => {
+            mask.style.setProperty('--logo', `${s.size}px`)
+            mask.style.setProperty('--mx', `${s.mx}%`)
+            mask.style.setProperty('--my', `${s.my}%`)
+          }
+          apply()
           if (!motion) return
 
-          // Entrada: título letra a letra com máscara
-          const split = SplitText.create('.hero-title', { type: 'lines,chars', mask: 'lines' })
-          const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-          tl.from('.hero-badge', { y: 20, autoAlpha: 0, duration: 0.8 })
-            .from(split.chars, { yPercent: 110, rotate: 6, duration: 1.1, stagger: 0.025 }, '<0.1')
-            .from('.hero-fade', { y: 30, autoAlpha: 0, duration: 1, stagger: 0.08 }, '<0.4')
-            .from('.hero-phone', { y: 120, rotate: 8, autoAlpha: 0, duration: 1.4 }, 0.3)
-            .from('.hero-cover', { scale: 0.4, autoAlpha: 0, duration: 1.2, stagger: 0.08, ease: 'back.out(1.6)' }, 0.6)
+          const split = SplitText.create('.hero-desc-title', { type: 'words' })
+          gsap.set(split.words, { opacity: 0.18 })
+          gsap.set('.hero-desc', { autoAlpha: 0 })
+          gsap.set('.hero-desc-sub', { autoAlpha: 0, y: 20 })
 
-          // Saída com scroll (scrub): conteúdo sobe e some, phone dá zoom
-          const out = gsap.timeline({
-            scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-          })
-          out.to('.hero-copy', { yPercent: -30, autoAlpha: 0, ease: 'none' }, 0)
-            .to('.hero-phone', { yPercent: desktop ? 18 : 8, scale: 0.92, ease: 'none' }, 0)
-            .to('.hero-blob', { yPercent: 40, ease: 'none' }, 0)
-          gsap.utils.toArray<HTMLElement>('.hero-cover').forEach((el) => {
-            out.to(el, { yPercent: -60 * Number(el.dataset.depth), ease: 'none' }, 0)
-          })
+          // Entrada
+          gsap.from('.hero-in', { y: 40, autoAlpha: 0, duration: 1.1, stagger: 0.1, ease: 'expo.out', delay: 0.15 })
+          gsap.from(s, { size: startSize() * 0.6, duration: 1.6, ease: 'expo.out', onUpdate: apply })
 
-          // Parallax com o mouse (apenas desktop)
-          if (desktop) {
-            const items = gsap.utils.toArray<HTMLElement>('.hero-cover-inner')
-            const setters = items.map((el) => ({
-              x: gsap.quickTo(el, 'x', { duration: 0.8, ease: 'power3' }),
-              y: gsap.quickTo(el, 'y', { duration: 0.8, ease: 'power3' }),
-              d: Number(el.dataset.depth),
-            }))
-            const onMove = (e: PointerEvent) => {
-              const nx = e.clientX / window.innerWidth - 0.5
-              const ny = e.clientY / window.innerHeight - 0.5
-              setters.forEach((s) => {
-                s.x(nx * 40 * s.d)
-                s.y(ny * 40 * s.d)
-              })
-            }
-            window.addEventListener('pointermove', onMove)
-            return () => {
-              window.removeEventListener('pointermove', onMove)
-              split.revert()
-            }
-          }
+          const tl = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+              trigger: '.hero-stage',
+              start: 'top top',
+              end: '+=230%',
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          })
+          // Como na referência: o título sobe junto com a rolagem (sem sumir) enquanto o logo abre
+          tl.to('.hero-copy', { yPercent: -100, duration: 1, ease: 'none' }, 0)
+            .fromTo(s, { size: startSize, mx: s.mx, my: s.my }, { size: endSize, mx: 50, my: 50, duration: 1.2, ease: 'power2.in', onUpdate: apply }, 0)
+            .to(mask, { opacity: 0, duration: 0.35 }, 0.85)
+            .to('.hero-veil', { opacity: 1, duration: 0.5 }, 1.1)
+            .to('.hero-desc', { autoAlpha: 1, duration: 0.2 }, 1.1)
+            .to(split.words, { opacity: 1, stagger: 0.06, duration: 0.3 }, 1.2)
+            .to('.hero-desc-sub', { autoAlpha: 1, y: 0, duration: 0.4 }, '>-0.1')
+            .to({}, { duration: 0.4 })
+
           return () => split.revert()
         },
       )
@@ -71,79 +113,102 @@ export default function Hero() {
   )
 
   return (
-    <section ref={root} id="topo" className="relative isolate min-h-svh overflow-hidden pt-28 pb-16 lg:pt-36">
-      {/* Fundo */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,#0f3d22_0%,#121212_85%)]" />
-      <div className="hero-blob pointer-events-none absolute inset-0 -z-10">
-        <div className="animate-blob absolute -left-[10%] top-[-10%] h-[60vmax] w-[60vmax] rounded-full bg-green/40 blur-[120px]" />
-        <div className="animate-blob absolute right-[-15%] top-[10%] h-[45vmax] w-[45vmax] rounded-full bg-[#7c26f8]/35 blur-[120px] [animation-delay:-6s]" />
-        <div className="animate-blob absolute bottom-[-20%] left-[30%] h-[40vmax] w-[40vmax] rounded-full bg-[#ff4169]/20 blur-[120px] [animation-delay:-12s]" />
-      </div>
-      <div className="noise pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: `url(${img('ruido.png')})` }} />
+    <section ref={root} id="topo" className="relative bg-base">
+      <div className="hero-stage relative min-h-svh overflow-hidden">
+        {/* Vídeo + camada escura com o logo vazado */}
+        <div className="absolute inset-x-0 top-0 h-svh">
+          {src && (
+            <video
+              ref={video}
+              key={src}
+              className="absolute inset-0 h-full w-full object-cover"
+              src={src}
+              poster={heroVideo.poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden="true"
+            />
+          )}
+          <div className="hero-veil absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35),rgba(0,0,0,0.75))] opacity-0" />
+          <div
+            className="hero-mask absolute inset-0 bg-base will-change-[mask-size]"
+            style={{
+              maskImage: `linear-gradient(#000,#000), ${logoMask}`,
+              WebkitMaskImage: `linear-gradient(#000,#000), ${logoMask}`,
+              maskComposite: 'exclude',
+              WebkitMaskComposite: 'xor',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              maskSize: '100% 100%, var(--logo) var(--logo)',
+              WebkitMaskSize: '100% 100%, var(--logo) var(--logo)',
+              maskPosition: '0 0, var(--mx) var(--my)',
+              WebkitMaskPosition: '0 0, var(--mx) var(--my)',
+            }}
+          />
+        </div>
 
-      <div className="container-x grid items-center gap-14 lg:min-h-[calc(100svh-12rem)] lg:grid-cols-[1.15fr_1fr]">
-        <div className="hero-copy text-center lg:text-left">
-          <span className="hero-badge inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold ring-1 ring-white/15 backdrop-blur">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green" />
+        {/* Título */}
+        <div className="hero-copy container-x relative z-10 flex min-h-svh flex-col justify-end pb-14 pt-28 md:justify-center md:pb-0">
+          <h1 className="hero-in text-[clamp(3.25rem,9.2vw,9.5rem)] font-black leading-[0.92] tracking-[-0.05em]">
+            O lugar definitivo para
+            <span className="relative block h-[1.12em] overflow-hidden">
+              <span className="sr-only">{keywords.join(', ')}</span>
+              {keywords.map((k, i) => {
+                // ativa no lugar; a anterior sai por cima; as demais esperam embaixo, invisíveis
+                const state = i === kw ? 'in' : i === prevKw ? 'out' : 'wait'
+                return (
+                  <span
+                    key={k}
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 top-0 whitespace-nowrap italic text-white ${
+                      state === 'wait' ? 'transition-none' : 'transition-[translate,opacity] duration-700 ease-[cubic-bezier(0.87,0,0.13,1)]'
+                    }`}
+                    style={{
+                      translate: state === 'in' ? '0 0' : state === 'out' ? '0 -110%' : '0 110%',
+                      opacity: state === 'wait' ? 0 : 1,
+                    }}
+                  >
+                    {k}
+                  </span>
+                )
+              })}
             </span>
-            Oferta por tempo limitado
-          </span>
-
-          <h1 className="hero-title mt-6 text-[clamp(3.25rem,9vw,8.5rem)] font-black leading-[0.9] tracking-[-0.055em]">
-            Escute sem limites
           </h1>
 
-          <p className="hero-fade mx-auto mt-7 max-w-xl text-lg font-medium text-white/85 sm:text-xl lg:mx-0">
-            <strong className="text-white">R$ 0 por 1 mês</strong> de Premium Individual. Cancele quando quiser.
-          </p>
-
-          <div className="hero-fade mt-9 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start">
-            <a href="#planos" className="btn btn-light w-full sm:w-auto">
-              Experimente 1 mês por R$ 0
-            </a>
-            <a href="#planos" className="btn btn-outline group w-full sm:w-auto">
-              Ver todos os planos
-              <IconArrow className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
+          <div className="hero-in mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="#planos" className="btn btn-green">Experimente 1 mês por R$ 0</a>
+            <a href="#planos" className="btn btn-outline">Ver todos os planos</a>
           </div>
-
-          <p className="hero-fade mx-auto mt-6 max-w-md text-xs leading-relaxed text-white/55 lg:mx-0">
-            Somente Premium Individual. R$ 0 por 1 mês, depois R$ 21,90/mês. Oferta disponível apenas para quem nunca
-            assinou o Premium. Sujeito a termos.
+          <p className="hero-in mt-6 max-w-sm text-xs leading-relaxed text-white/60">
+            Apenas para o Premium Individual. R$ 0 por 1 mês, depois R$ 23,90 por mês. Oferta disponível apenas para
+            quem nunca teve o Premium. Sujeito a Termos.
           </p>
         </div>
 
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-[460px]">
-          {covers.map((c) => (
-            <div key={c.src} data-depth={c.depth} className={`hero-cover absolute z-0 ${c.cls}`}>
-              <div data-depth={c.depth} className="hero-cover-inner">
-                <img
-                  src={img(c.src)}
-                  alt=""
-                  className="animate-float aspect-square w-full rounded-xl object-cover shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)]"
-                  style={{ animationDelay: `${c.depth * -2}s` }}
-                />
-              </div>
-            </div>
-          ))}
-          <div className="hero-phone absolute inset-0 z-10 flex items-center justify-center">
-            <img
-              src={img('iphone2.png')}
-              alt="App do Spotify aberto na playlist Descobertas da Semana"
-              className="h-full w-auto drop-shadow-[0_40px_80px_rgba(0,0,0,0.6)]"
-            />
-          </div>
+        {/* Apresentação que aparece sobre o vídeo */}
+        <div className="hero-desc container-x relative z-10 flex flex-col justify-start py-24 motion-safe:invisible motion-safe:absolute motion-safe:inset-x-0 motion-safe:top-0 motion-safe:h-svh motion-safe:pb-0 motion-safe:pt-32">
+          <h2 className="hero-desc-title max-w-3xl text-[clamp(1.9rem,3.4vw,3rem)] font-semibold leading-[1.15] tracking-[-0.025em]">
+            Como o centro mundial da música, o Spotify é onde fãs e artistas se encontram.
+          </h2>
+          <p className="hero-desc-sub mt-6 max-w-xl text-lg font-medium text-white/90 sm:text-xl">
+            É o lugar pra descobrir a música perfeita pro momento. O lugar que torna a música sua trilha sonora.
+          </p>
         </div>
-      </div>
 
-      {/* Indicador de scroll */}
-      <div className="hero-copy pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-white/50 lg:flex">
-        Role
-        <span className="relative h-10 w-px overflow-hidden bg-white/20">
-          <span className="absolute inset-x-0 top-0 h-1/2 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-white" />
-        </span>
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="absolute bottom-6 right-6 z-20 grid h-11 w-11 place-items-center rounded-full bg-black/50 text-white ring-1 ring-white/20 backdrop-blur transition hover:scale-105 hover:bg-black/70"
+          aria-label={playing ? 'Pausar vídeo' : 'Reproduzir vídeo'}
+        >
+          {playing ? (
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4.5v15l12.5-7.5z" /></svg>
+          )}
+        </button>
       </div>
     </section>
   )
