@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "arial black",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-13T01:18:01.386Z",
+        "reason": "Claude: decision-round HTML sketch, not shipped; it stands in for wood type with a system face"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "arial black",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-13T01:18:01.568Z",
+        "reason": "Claude: decision-round HTML sketch, not shipped; it stands in for wood type with a system face"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "16px",
+        "files": [
+          "src/components/Footer.tsx"
+        ],
+        "createdAt": "2026-11-13T01:25:35.268Z",
+        "reason": "Claude: sizes the Spotify wordmark lockup, a logo, not text on the type ramp"
+      }
+    ]
+  }
+}

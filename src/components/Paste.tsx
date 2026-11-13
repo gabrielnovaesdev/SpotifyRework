@@ -10,7 +10,7 @@ const bills: Bill[] = [
   { word: 'Na ordem que quiser', line: 'Qualquer música, de qualquer álbum, a qualquer momento.', bg: 'bg-yellow', ink: 'text-ink', pos: 'lg:left-[61%] lg:top-[4%] lg:w-[39%] lg:rotate-[-0.5deg]' },
   { word: 'Áudio superior', line: 'Mais detalhe e definição, até em lossless nos aparelhos compatíveis.', bg: 'bg-ink', ink: 'text-paper', accent: 'text-green', pos: 'lg:left-[1%] lg:top-[53%] lg:w-[35%] lg:rotate-[0.8deg]' },
   { word: 'Jam', big: true, line: 'Crie uma Jam e deixe todo mundo escolher as próximas faixas.', bg: 'bg-green', ink: 'text-ink', pos: 'lg:left-[34%] lg:top-[51%] lg:w-[28%] lg:rotate-[-1.2deg]' },
-  { word: 'Sua fila', big: true, line: 'Arraste, reordene e monte a sequência perfeita para cada momento.', bg: 'bg-paper', ink: 'text-ink', accent: 'text-green', pos: 'lg:left-[60%] lg:top-[55%] lg:w-[40%] lg:rotate-[1.4deg]' },
+  { word: 'Sua fila', big: true, line: 'Arraste, reordene e monte a sequência perfeita para cada momento.', bg: 'bg-paper', ink: 'text-ink', pos: 'lg:left-[60%] lg:top-[55%] lg:w-[40%] lg:rotate-[1.4deg]' },
 ]
 
 /**

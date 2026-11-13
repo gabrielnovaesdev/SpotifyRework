@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T01:17:19+00:00",
+  "title": "Design System: Spotify Premium, releitura (v1.2)",
+  "extensions": {
+    "colorMeta": {
+      "wall": {
+        "role": "neutral",
+        "displayName": "Concrete Wall",
+        "canonical": "#8d8a84",
+        "tonalRamp": [
+          "#1c1c1a",
+          "#383735",
+          "#55534f",
+          "#716e6a",
+          "#9e9c96",
+          "#bbb9b5",
+          "#d7d6d4",
+          "#eeeded"
+        ]
+      },
+      "wall-dark": {
+        "role": "neutral",
+        "displayName": "Wall Shadow",
+        "canonical": "#6f6c66",
+        "tonalRamp": [
+          "#161614",
+          "#2c2b29",
+          "#43413d",
+          "#595652",
+          "#85827d",
+          "#a9a7a3",
+          "#cdccc9",
+          "#e9e9e8"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Poster Paper",
+        "canonical": "#f4f4f0",
+        "tonalRamp": [
+          "#313130",
+          "#626260",
+          "#929290",
+          "#c3c3c0",
+          "#f6f6f2",
+          "#f8f8f6",
+          "#fbfbfa",
+          "#fdfdfd"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Print Ink",
+        "canonical": "#111111",
+        "tonalRamp": [
+          "#030303",
+          "#070707",
+          "#0a0a0a",
+          "#0e0e0e",
+          "#353535",
+          "#707070",
+          "#acacac",
+          "#dbdbdb"
+        ]
+      },
+      "pink": {
+        "role": "primary",
+        "displayName": "Fluorescent Pink",
+        "canonical": "#ff2e88",
+        "tonalRamp": [
+          "#33091b",
+          "#661236",
+          "#991c52",
+          "#cc256d",
+          "#ff4d9a",
+          "#ff82b8",
+          "#ffb6d5",
+          "#ffe0ed"
+        ]
+      },
+      "yellow": {
+        "role": "primary",
+        "displayName": "Poster Yellow",
+        "canonical": "#ffe600",
+        "tonalRamp": [
+          "#332e00",
+          "#665c00",
+          "#998a00",
+          "#ccb800",
+          "#ffea26",
+          "#fff066",
+          "#fff6a6",
+          "#fffbd9"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Signal Green",
+        "canonical": "#00c853",
+        "tonalRamp": [
+          "#002811",
+          "#005021",
+          "#007832",
+          "#00a042",
+          "#26d06d",
+          "#66de98",
+          "#a6ecc3",
+          "#d9f7e5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero offer only; wood-type caps opened to 1.22 to clear accents."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headlines, final call, plan name and price."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The single word on each benefit or feature bill."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "The short line under a headline."
+      },
+      "body-small": {
+        "displayName": "Small",
+        "purpose": "Terms, reference-price note, footer legal, photo captions."
+      },
+      "label": {
+        "displayName": "Tape label",
+        "purpose": "Tape strips only; uppercase, wdth 80."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paste",
+        "value": "0 2px 3px rgb(0 0 0 / 0.25), 0 10px 24px -14px rgb(0 0 0 / 0.5)",
+        "purpose": "Every poster."
+      },
+      {
+        "name": "tape-rest",
+        "value": "0 2px 2px rgb(0 0 0 / 0.3)",
+        "purpose": "Tape strip at rest."
+      },
+      {
+        "name": "tape-lifted",
+        "value": "0 6px 10px -2px rgb(0 0 0 / 0.35)",
+        "purpose": "Tape strip on hover."
+      },
+      {
+        "name": "tape-pressed",
+        "value": "0 1px 1px rgb(0 0 0 / 0.3)",
+        "purpose": "Tape strip on press."
+      },
+      {
+        "name": "device",
+        "value": "0 18px 24px -8px rgba(0,0,0,0.45)",
+        "purpose": "Phone frame only."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 3px solid #111111; outline-offset: 3px; box-shadow: 0 0 0 6px #ffe600",
+        "purpose": "Global :focus-visible."
+      }
+    ],
+    "texture": [
+      {
+        "name": "grain",
+        "value": "SVG feTurbulence fractalNoise, baseFrequency 0.85, numOctaves 3, desaturated, 240px tile (--grain)",
+        "purpose": "Blended soft-light into the wall ground and, at 45% opacity, into every poster."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-paste",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Every state transition."
+      },
+      {
+        "name": "tape-transition",
+        "value": "transform 0.25s and box-shadow 0.25s on ease-paste",
+        "purpose": "Tape lift and press."
+      },
+      {
+        "name": "paste-reveal",
+        "value": "clip-path inset(0 0 100% 0) to full, 0.9s, stagger 0.14s, expo.out; tape slap scale 1.25 to 1, 0.5s, back.out(2.2)",
+        "purpose": "Hero load."
+      },
+      {
+        "name": "pinned-paste",
+        "value": "pin under the 64px nav for 6 x 55% viewport, scrub 0.6; each bill clips top-down while y -30px to 0; counter 0/6 to 6/6",
+        "purpose": "Benefits wall, 1024px and up with motion allowed."
+      },
+      {
+        "name": "placard-flip",
+        "value": "rotateX 90deg to -12deg (60%) to 0, 0.45s, ease-paste, origin top centre",
+        "purpose": "Plan name and price on selection."
+      },
+      {
+        "name": "unroll",
+        "value": "grid-template-rows 0fr to 1fr, 0.5s, ease-paste",
+        "purpose": "FAQ answer and mobile menu."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "no Lenis, no reveal, no pin, no flip, no tape transition, mascot still image",
+        "purpose": "The wall renders already pasted."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "wall-max",
+        "value": "1440px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Tape, primary",
+      "kind": "button",
+      "refersTo": "tape-primary",
+      "description": "Green tape strip with ink label; the main action on a light bill.",
+      "html": "<a href=\"#\" class=\"ds-tape-primary\">Começar 1 mês grátis <svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-tape-primary{position:relative;display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:12px;padding:12px 28px;font-family:var(--font-sans);font-size:1.125rem;font-weight:800;text-transform:uppercase;letter-spacing:0.025em;font-variation-settings:'wdth' 80;border:0;border-radius:0;text-decoration:none;cursor:pointer;background:#00c853;color:#111111;transform:rotate(-2deg);box-shadow:0 2px 2px rgb(0 0 0/0.3);transition:transform .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1)),box-shadow .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1));}.ds-tape-primary:hover{transform:translateY(-2px) rotate(-2deg);box-shadow:0 6px 10px -2px rgb(0 0 0/0.35);}.ds-tape-primary:active{transform:translateY(1px) rotate(-2deg);box-shadow:0 1px 1px rgb(0 0 0/0.3);}.ds-tape-primary:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}@media (prefers-reduced-motion:reduce){.ds-tape-primary{transition:none}}"
+    },
+    {
+      "name": "Tape, ink",
+      "kind": "button",
+      "refersTo": "tape-ink",
+      "description": "Ink tape with paper label; the action on pink, yellow, green or paper bills.",
+      "html": "<a href=\"#\" class=\"ds-tape-ink\">Escolher meu plano <svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-tape-ink{position:relative;display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:12px;padding:12px 28px;font-family:var(--font-sans);font-size:1.125rem;font-weight:800;text-transform:uppercase;letter-spacing:0.025em;font-variation-settings:'wdth' 80;border:0;border-radius:0;text-decoration:none;cursor:pointer;background:#111111;color:#f4f4f0;transform:rotate(1.5deg);box-shadow:0 2px 2px rgb(0 0 0/0.3);transition:transform .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1)),box-shadow .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1));}.ds-tape-ink:hover{transform:translateY(-2px) rotate(1.5deg);box-shadow:0 6px 10px -2px rgb(0 0 0/0.35);}.ds-tape-ink:active{transform:translateY(1px) rotate(1.5deg);box-shadow:0 1px 1px rgb(0 0 0/0.3);}.ds-tape-ink:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}@media (prefers-reduced-motion:reduce){.ds-tape-ink{transition:none}}"
+    },
+    {
+      "name": "Tape, nav",
+      "kind": "button",
+      "refersTo": "tape-nav",
+      "description": "Yellow tape in the black nav strip.",
+      "html": "<div style=\"background:#111111;padding:16px\"><a href=\"#\" class=\"ds-tape-nav\">Começar grátis</a></div>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-tape-nav{position:relative;display:inline-flex;min-height:48px;align-items:center;justify-content:center;gap:12px;padding:8px 28px;font-family:var(--font-sans);font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.025em;font-variation-settings:'wdth' 80;border:0;border-radius:0;text-decoration:none;cursor:pointer;background:#ffe600;color:#111111;transform:rotate(-1.5deg);box-shadow:0 2px 2px rgb(0 0 0/0.3);transition:transform .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1)),box-shadow .25s var(--ease-paste,cubic-bezier(0.16,1,0.3,1));}.ds-tape-nav:hover{transform:translateY(-2px) rotate(-1.5deg);box-shadow:0 6px 10px -2px rgb(0 0 0/0.35);}.ds-tape-nav:active{transform:translateY(1px) rotate(-1.5deg);box-shadow:0 1px 1px rgb(0 0 0/0.3);}.ds-tape-nav:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}@media (prefers-reduced-motion:reduce){.ds-tape-nav{transition:none}}"
+    },
+    {
+      "name": "Poster",
+      "kind": "card",
+      "refersTo": "poster-pink",
+      "description": "A flat single-colour bill with paste shadow, grain and a wood-type word, pasted on the wall with a small tilt.",
+      "html": "<div class=\"ds-wall\"><div class=\"ds-poster\" style=\"background:#ff2e88;color:#111111;transform:rotate(-1.5deg);max-width:360px\"><h3 class=\"ds-wood\" style=\"font-size:4rem\">Sem anúncio</h3><p class=\"ds-line\">Nada entre uma faixa e outra. Só música, do começo ao fim.</p></div></div>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-wall{background-color:#8d8a84;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");background-size:240px;background-blend-mode:soft-light;padding:32px}.ds-poster{position:relative;isolation:isolate;overflow:hidden;border-radius:0;padding:40px;box-shadow:0 2px 3px rgb(0 0 0/0.25),0 10px 24px -14px rgb(0 0 0/0.5);}.ds-poster::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");background-size:240px;opacity:.45;mix-blend-mode:soft-light;}.ds-wood{font-family:var(--font-display);text-transform:uppercase;line-height:1.1;letter-spacing:-0.01em;font-weight:400;margin:0;}.ds-line{font-family:var(--font-sans);font-weight:600;font-size:1.125rem;line-height:1.375;margin:24px 0 0;max-width:24rem}"
+    },
+    {
+      "name": "Poster, ink with accent",
+      "kind": "card",
+      "refersTo": "poster-ink",
+      "description": "Black bill with one headline word swapped to yellow or green.",
+      "html": "<div class=\"ds-wall\"><div class=\"ds-poster\" style=\"background:#111111;color:#f4f4f0;max-width:420px;transform:rotate(-1deg)\"><h2 class=\"ds-wood\" style=\"font-size:5rem\">É <span style=\"color:#ffe600\">fácil</span></h2><p class=\"ds-line\">Três gestos e você já está ouvindo.</p></div></div>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-wall{background-color:#8d8a84;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");background-size:240px;background-blend-mode:soft-light;padding:32px}.ds-poster{position:relative;isolation:isolate;overflow:hidden;border-radius:0;padding:40px;box-shadow:0 2px 3px rgb(0 0 0/0.25),0 10px 24px -14px rgb(0 0 0/0.5);}.ds-poster::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");background-size:240px;opacity:.45;mix-blend-mode:soft-light;}.ds-wood{font-family:var(--font-display);text-transform:uppercase;line-height:1.1;letter-spacing:-0.01em;font-weight:400;margin:0;}.ds-line{font-family:var(--font-sans);font-weight:600;font-size:1.125rem;line-height:1.375;margin:24px 0 0;max-width:24rem}"
+    },
+    {
+      "name": "Plan tear-off strips",
+      "kind": "custom",
+      "refersTo": "plan-strip",
+      "description": "Radiogroup of tear-off strips at the foot of the plan poster; the selected strip drops 12px and turns ink.",
+      "html": "<div class=\"ds-plan\"><div role=\"radiogroup\" aria-label=\"Planos\" class=\"ds-strips\"><button type=\"button\" role=\"radio\" aria-checked=\"true\" class=\"ds-strip\"><span class=\"ds-strip-name\">Individual</span><span>R$ 21,90</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-strip\"><span class=\"ds-strip-name\">Duo</span><span>R$ 27,90</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-strip\"><span class=\"ds-strip-name\">Família</span><span>R$ 34,90</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-strip\"><span class=\"ds-strip-name\">Universitário</span><span>R$ 11,90</span></button></div></div>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-plan{background:#ffe600;max-width:640px;padding-bottom:12px;box-shadow:0 2px 3px rgb(0 0 0/0.25),0 10px 24px -14px rgb(0 0 0/0.5)}.ds-strips{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px dashed rgb(17 17 17/0.5)}.ds-strip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:128px;padding:16px 8px;background:transparent;color:#111111;border:0;border-radius:0;font-family:var(--font-sans);font-size:.875rem;font-weight:700;cursor:pointer;transition:transform .3s var(--ease-paste,cubic-bezier(0.16,1,0.3,1)),background-color .3s var(--ease-paste,cubic-bezier(0.16,1,0.3,1))}.ds-strip:not(:last-child){border-right:2px dashed rgb(17 17 17/0.5)}.ds-strip-name{font-family:var(--font-display);text-transform:uppercase;line-height:1.1;font-size:1.875rem;font-weight:400}.ds-strip[aria-checked=false]:hover{transform:translateY(-2px);background:rgb(17 17 17/0.1)}.ds-strip[aria-checked=true]{transform:translateY(12px);background:#111111;color:#f4f4f0}.ds-strip:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}"
+    },
+    {
+      "name": "Nav strip",
+      "kind": "nav",
+      "refersTo": "nav-strip",
+      "description": "Sticky black strip with wood-type links that turn yellow on hover.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Principal\"><span class=\"ds-brand\">Spotify</span><ul><li><a href=\"#\">Benefícios</a></li><li><a href=\"#\">É fácil</a></li><li><a href=\"#\">Planos</a></li><li><a href=\"#\">Dúvidas</a></li></ul></nav>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-nav{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;background:#111111;color:#f4f4f0}.ds-brand{font-family:var(--font-sans);font-weight:800;font-size:1.25rem;letter-spacing:-0.04em}.ds-nav ul{display:flex;list-style:none;margin:0;padding:0}.ds-nav a{display:inline-flex;height:44px;align-items:center;padding:0 16px;font-family:var(--font-display);text-transform:uppercase;font-size:1.25rem;line-height:1.1;letter-spacing:.025em;color:inherit;text-decoration:none;transition:color .2s}.ds-nav a:hover{color:#ffe600}.ds-nav a:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}"
+    },
+    {
+      "name": "FAQ toggle row",
+      "kind": "custom",
+      "refersTo": "poster-paper",
+      "description": "Ruled accordion row inside a paper poster; the square yellow toggle turns pink and rotates 45deg when open.",
+      "html": "<div style=\"background:#f4f4f0;padding:24px;max-width:560px\"><button type=\"button\" class=\"ds-faq\" aria-expanded=\"false\"><span class=\"ds-faq-q\">Como posso cancelar o Premium?</span><span class=\"ds-faq-t\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\" stroke-linecap=\"round\"/></svg></span></button></div>",
+      "css": ":root{--color-wall:#8d8a84;--color-paper:#f4f4f0;--color-ink:#111111;--color-pink:#ff2e88;--color-yellow:#ffe600;--color-green:#00c853;--ease-paste:cubic-bezier(0.16,1,0.3,1);--font-display:'Anton','Archivo Variable',sans-serif;--font-sans:'Archivo Variable',ui-sans-serif,system-ui,sans-serif}.ds-faq{display:flex;width:100%;align-items:center;justify-content:space-between;gap:24px;padding:20px 0;background:none;border:0;border-top:2px solid #111111;border-bottom:2px solid #111111;font-family:var(--font-sans);font-size:1.25rem;font-weight:800;color:#111111;text-align:left;cursor:pointer}.ds-faq:hover .ds-faq-q{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}.ds-faq-t{display:grid;place-items:center;width:40px;height:40px;flex-shrink:0;background:#ffe600;transition:transform .5s var(--ease-paste,cubic-bezier(0.16,1,0.3,1)),background-color .5s var(--ease-paste,cubic-bezier(0.16,1,0.3,1))}.ds-faq[aria-expanded=true] .ds-faq-t{transform:rotate(45deg);background:#ff2e88}.ds-faq:focus-visible{outline:3px solid #111111;outline-offset:3px;box-shadow:0 0 0 6px #ffe600;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lambe-Lambe Wall",
+    "overview": "The page is a city wall of street show posters. A grey, grained concrete ground carries flat bills of one colour each, pasted by hand: slightly tilted, overlapping their neighbours, sometimes repeated in a run the way a crew pastes the same bill three times. Every offer, feature and plan is a poster; every action is a strip of tape-pasted paper. Nothing floats, glows or rounds off; depth is the thickness of paper on a wall.\n\nDensity is loud and close. Posters sit on a 16 to 20px gap, wood-type caps fill their fields edge to edge, and the support copy is short, bold and set right under the headline. The wall itself is the only neutral; it shows through the gaps and frames each bill.\n\nMotion is the act of pasting. Bills reveal top to bottom as if a brush passed over them, the benefits wall is pasted bill by bill while the section is pinned, and the plan price flips like a placard. With reduced motion the wall is simply already pasted.",
+    "keyCharacteristics": [
+      "Concrete wall ground (grained grey) with flat single-colour posters pasted on it.",
+      "Condensed wood-type caps (Anton) for every headline; Archivo for everything else.",
+      "Square paper, small hand tilts (within ±2deg), overlaps across poster edges.",
+      "Buttons are tape strips; the plan picker is a row of tear-off strips.",
+      "Short soft paste shadows; no glows, no gradients, no rounded paper."
+    ],
+    "rules": [
+      {
+        "name": "The One Colour Per Bill Rule",
+        "body": "A poster owns one flat field of one palette colour. No gradients, no tints, no two-tone panels; variety comes from the next bill, not from inside this one.",
+        "section": "colors"
+      },
+      {
+        "name": "The Accent Must Read Rule",
+        "body": "A headline may swap one word to a second palette colour, and only to a pair that holds at least 3:1 at display size: yellow or green on ink, pink on paper, ink on any fluorescent. Pink on yellow (2.8:1) and green on paper (2.0:1) do not qualify.",
+        "section": "colors"
+      },
+      {
+        "name": "The Accent Clearance Rule",
+        "body": "Wood type is set at line-height 1.1 by default, the minimum at which Anton's tall cap accents (Ú, Á, Ç, Ó) clear the line above. When a tight multi-line stack carries accented caps on a lower line at small widths or large sizes, open it further: 1.22 on the hero display, 1.28 on the small SEM ANÚNCIO bills. Never set wood type tighter than 1.1.",
+        "section": "typography"
+      },
+      {
+        "name": "The Caps Only Rule",
+        "body": "Anton appears only in uppercase via the wood style. Archivo never imitates it in caps at display size.",
+        "section": "typography"
+      },
+      {
+        "name": "The Pasted-Over Rule",
+        "body": "At least one bill per section overlaps a neighbour's edge on desktop. Bills never align into a row of equal cards.",
+        "section": "layout"
+      },
+      {
+        "name": "The Repetition Rule",
+        "body": "The same bill may be pasted in a run (three identical bills, small tilt differences, the copies hidden from assistive tech). Repetition is a wall device, not duplication of facts: a fact appears on one bill only.",
+        "section": "layout"
+      },
+      {
+        "name": "The Hand Tilt Rule",
+        "body": "Tilts run between -2deg and +1.5deg, alternate in sign between neighbours, and are dropped on phone where bills stack. Tape strips carry their tilt through hover and press via the tilt helper.",
+        "section": "layout"
+      },
+      {
+        "name": "The Paper Thickness Rule",
+        "body": "Shadows are short and soft and always below the paper. No hard offset shadows, no coloured shadows, no glow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do make every new surface a poster: one flat palette colour, square, paste shadow, grain overlay.",
+      "Do make every action a tape strip with a small tilt, lifting 2px on hover and sinking 1px on press.",
+      "Do set every headline in Anton caps at line-height 1.1 or more, opening to 1.22 to 1.28 on tight multi-line accented stacks.",
+      "Do overlap at least one bill across a neighbour's edge per section on desktop, and stack flat on phone.",
+      "Do keep the educational disclaimer visible beside the prices and in the footer.",
+      "Do give every motion a reduced-motion path that shows the finished wall."
+    ],
+    "donts": [
+      "Don't round poster, tape or strip corners; only the phone frame is rounded.",
+      "Don't use gradients, glows, blur or coloured shadows; depth is paper thickness.",
+      "Don't line bills up into rows of equal cards.",
+      "Don't tilt beyond ±2deg.",
+      "Don't set an accent word on a ground below 3:1 (pink on yellow, green on paper).",
+      "Don't set wood type below line-height 1.1; accents collide with the line above."
+    ]
+  }
+}

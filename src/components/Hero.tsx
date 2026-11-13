@@ -31,7 +31,7 @@ export default function Hero() {
           <h1 className="wood text-[clamp(5rem,12vw,11rem)] leading-[1.22]">
             Ouça
             <br />
-            sem <span className="text-pink">parar</span>
+            sem <span className="bg-ink px-[0.08em] text-pink [box-decoration-break:clone]">parar</span>
           </h1>
           <p className="mt-6 max-w-xl text-xl font-bold leading-snug sm:text-2xl">
             Spotify Premium: 1 mês por R$ 0, depois R$ 21,90 por mês. Sem anúncios, offline e na ordem que você quiser.
