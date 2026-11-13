@@ -1,25 +1,29 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
-  --color-green: #1ed760;
-  --color-green-dark: #1db954;
-  --color-base: #121212;
-  --color-elevated: #1f1f1f;
-  --color-highlight: #2a2a2a;
-  --color-subdued: #b3b3b3;
-  --color-pink: #ffd2d7;
-  --color-lavender: #cfb5f7;
-  --color-sky: #a5c8f2;
-  --color-amber: #ffc864;
-  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Anton', 'Archivo Variable', sans-serif;
+  --color-wall: #8d8a84;
+  --color-wall-dark: #6f6c66;
+  --color-paper: #f4f4f0;
+  --color-ink: #111111;
+  --color-pink: #ff2e88;
+  --color-yellow: #ffe600;
+  --color-green: #00c853;
+  --ease-paste: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Grão neutro de reboco e papel (ruído SVG dessaturado, sem raster) */
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @layer base {
   html {
-    background: var(--color-base);
-    color: #fff;
+    background: var(--color-wall);
+    color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
+    scrollbar-color: var(--color-ink) var(--color-wall);
   }
   html.lenis,
   html.lenis body {
@@ -29,12 +33,14 @@
     overscroll-behavior: contain;
   }
   body {
-    background: var(--color-base);
     overflow-x: clip;
-    caret-color: var(--color-green);
-  }
-  html {
-    scrollbar-color: #3e3e3e var(--color-base);
+    caret-color: var(--color-pink);
+    font-variation-settings: 'wdth' 100;
+    /* concreto: cinza do muro com o grão do reboco */
+    background-color: var(--color-wall);
+    background-image: var(--grain);
+    background-size: 240px;
+    background-blend-mode: soft-light;
   }
   h1, h2, h3 {
     text-wrap: balance;
@@ -43,69 +49,72 @@
     text-underline-offset: 0.2em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-green);
+    outline: 3px solid var(--color-ink);
     outline-offset: 3px;
-    border-radius: 6px;
+    box-shadow: 0 0 0 6px var(--color-yellow);
   }
   ::selection {
-    background: var(--color-green);
-    color: #000;
+    background: var(--color-pink);
+    color: var(--color-ink);
   }
 }
 
 @layer components {
-  .container-x {
-    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-8 lg:px-12;
+  .wall-x {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-12;
   }
-  .btn {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-base font-bold tracking-tight transition-[transform,background-color,box-shadow] duration-300 ease-(--ease-spring) active:scale-95;
+  /* Cartaz: um campo de cor chapada com grão de papel e sombra curta de colagem */
+  .poster {
+    @apply relative isolate overflow-hidden;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.25), 0 10px 24px -14px rgb(0 0 0 / 0.5);
   }
-  .btn-light {
-    @apply bg-white text-black hover:scale-[1.04] hover:bg-white/90;
+  .poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--grain);
+    background-size: 240px;
+    opacity: 0.45;
+    mix-blend-mode: soft-light;
   }
-  .btn-outline {
-    @apply text-white ring-1 ring-white/50 ring-inset hover:scale-[1.04] hover:ring-white;
+  .wood {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    /* Anton tem acentos altos em caixa alta: abaixo de ~1.1 o Ú e o Á encostam na linha de cima */
+    line-height: 1.1;
+    letter-spacing: -0.01em;
   }
-  .btn-green {
-    @apply bg-green text-black hover:scale-[1.04] hover:bg-[#3be477] hover:shadow-[0_8px_40px_-8px_rgba(30,215,96,0.7)];
+  /* Tira de papel colada: o botão do muro */
+  .tape {
+    @apply relative inline-flex min-h-12 items-center justify-center gap-3 px-7 py-3 text-lg font-extrabold uppercase tracking-wide;
+    font-variation-settings: 'wdth' 80;
+    box-shadow: 0 2px 2px rgb(0 0 0 / 0.3);
+    transition: transform 0.25s var(--ease-paste), box-shadow 0.25s var(--ease-paste);
   }
-  .noise {
-    opacity: 0.08;
-    mix-blend-mode: overlay;
+  .tape:hover {
+    transform: translateY(-2px) rotate(var(--tilt, 0deg));
+    box-shadow: 0 6px 10px -2px rgb(0 0 0 / 0.35);
+  }
+  .tape:active {
+    transform: translateY(1px) rotate(var(--tilt, 0deg));
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.3);
   }
 }
 
-/* Blobs animados do hero */
-@keyframes blob {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(8%, -6%) scale(1.15); }
-  66% { transform: translate(-6%, 8%) scale(0.9); }
+@keyframes flip {
+  0% { transform: rotateX(90deg); opacity: 0; }
+  60% { transform: rotateX(-12deg); opacity: 1; }
+  100% { transform: rotateX(0); }
 }
-.animate-blob { animation: blob 18s ease-in-out infinite; }
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-  50% { transform: translateY(-14px) rotate(var(--r, 0deg)); }
-}
-.animate-float { animation: float 6s ease-in-out infinite; }
-
-@keyframes eq {
-  0%, 100% { transform: scaleY(0.3); }
-  50% { transform: scaleY(1); }
+.animate-flip {
+  display: inline-block;
+  transform-origin: 50% 0;
+  animation: flip 0.45s var(--ease-paste);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
-@keyframes scrollcue {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(200%); }
-}
-@keyframes marquee {
-  to { transform: translateX(-50%); }
+  .animate-flip { animation: none; }
+  .tape { transition: none; }
 }
