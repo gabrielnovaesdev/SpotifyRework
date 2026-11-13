@@ -114,7 +114,9 @@
   animation: flip 0.45s var(--ease-paste);
 }
 
+/* Movimento reduzido: o estado muda na hora (FAQ, menu, tirinhas, cor do plano), sem nada deslizando */
 @media (prefers-reduced-motion: reduce) {
   .animate-flip { animation: none; }
-  .tape { transition: none; }
+  .tape,
+  [class*='transition'] { transition: none !important; }
 }
