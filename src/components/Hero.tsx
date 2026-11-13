@@ -7,6 +7,17 @@ import Pill from './Pill'
 import { IconArrow } from './Icons'
 import { Cassette, Equalizer, Headphones, Mic, Note, PlayBtn, Speaker, Vinyl } from './Stickers'
 
+/** Objeto embutido na linha de texto, do tamanho da caixa-alta, com o próprio loop. */
+function Inline({ children }: { children: ReactNode }) {
+  return (
+    <span aria-hidden="true" className="h-inl relative inline-block h-[0.9em] w-[0.9em] align-[-0.06em]">
+      <span className="loop-bob absolute inset-0 block" style={{ '--dur': '4.6s', '--dy': '-6px' } as CSSProperties}>
+        {children}
+      </span>
+    </span>
+  )
+}
+
 /** Objeto musical posicionado: o invólucro entra (escala/rotação) e o filho faz o loop próprio. */
 function Obj({ children, className, style, loop }: { children: ReactNode; className: string; style?: CSSProperties; loop: CSSProperties }) {
   return (
@@ -63,7 +74,7 @@ export default function Hero() {
         let sub: SplitText | undefined
         let lines: SplitText | undefined
         // o título espera a fonte (sem flash da fonte reserva) e entra já rolando
-        gsap.set(['.h-sub', '.h-title', '.h-cta'], { autoAlpha: 0 })
+        gsap.set(['.h-sub', '.h-title', '.h-cta', '.h-sym'], { autoAlpha: 0 })
         gsap.set('.h-obj', { scale: 0, autoAlpha: 0 })
         // rolos já parados na última cópia, à espera da fonte
         gsap.set('.h-reel', { yPercent: (-(REEL - 1) / REEL) * 100 })
@@ -75,18 +86,21 @@ export default function Hero() {
           gsap.set(['.h-sub', '.h-title'], { autoAlpha: 1 })
           sub = SplitText.create('.h-sub', { type: 'words', mask: 'words', aria: 'auto' })
           const tl = gsap.timeline({ defaults: { ease: ease.out } })
-          tl.from('.h-sym', { scale: 0.86, autoAlpha: 0, duration: 1.4 }, 0)
+          tl.fromTo('.h-sym', { scale: 0.86, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.4 }, 0)
           gsap.utils.toArray<HTMLElement>('.h-reel').forEach((r, i) => {
             tl.to(r, { yPercent: 0, duration: 0.95 + (i % 3) * 0.08, ease: 'expo.inOut' }, colDelay[i % colDelay.length])
           })
           tl.to('.h-obj', { scale: 1, autoAlpha: 1, rotate: 0, duration: 0.85, ease: 'back.out(2.2)', stagger: { each: 0.07, from: 'random' } }, 0.65)
             .fromTo('.h-cta', { y: 36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, ease: 'back.out(1.6)', stagger: 0.09 }, 0.4)
             .from(sub.words, { yPercent: 115, duration: 0.35, ease: 'power3.out', stagger: 0.1 }, 1.25)
-            .from('.h-terms', { autoAlpha: 0, duration: 0.5 }, 1.5)
+            .fromTo('.h-terms', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, 1.5)
         }
+        // `cancelled`: no modo estrito do React o primeiro contexto é desfeito antes da fonte
+        // carregar; sem a trava, a entrada dele rodaria junto e a segunda pararia no meio (apagada)
         let started = false
+        let cancelled = false
         const start = () => {
-          if (started) return
+          if (started || cancelled) return
           started = true
           ctx.add(run)
         }
@@ -113,7 +127,7 @@ export default function Hero() {
           .to('.h-ph-r', { yPercent: -60, rotate: -16, scale: 0.92, duration: 0.45 }, 0.58)
 
         // Bloco tipográfico: letras revelam conforme o scroll, no ritmo inclinado da referência
-        lines = SplitText.create('.h-type .tl', { type: 'chars', aria: 'auto' })
+        lines = SplitText.create('.h-type .tw', { type: 'words,chars', aria: 'auto' })
         gsap.from(lines.chars, {
           yPercent: 60,
           rotate: 10,
@@ -122,8 +136,17 @@ export default function Hero() {
           stagger: 0.03,
           scrollTrigger: { trigger: '.h-type', start: 'top 85%', end: 'center 50%', scrub: 0.6 },
         })
+        // objetos embutidos: saltam para dentro da linha logo depois das letras vizinhas
+        gsap.from('.h-inl', {
+          scale: 0,
+          rotate: (i) => [-40, 30, -25][i % 3],
+          ease: 'back.out(2.4)',
+          stagger: 0.25,
+          scrollTrigger: { trigger: '.h-type', start: 'top 75%', end: 'center 45%', scrub: 0.6 },
+        })
 
         return () => {
+          cancelled = true
           window.clearTimeout(fallback)
           sub?.revert()
           lines?.revert()
@@ -202,24 +225,23 @@ export default function Hero() {
 
       {/* 3. Bloco tipográfico inclinado */}
       <div className="h-type relative overflow-x-clip px-5 py-24 text-center sm:py-32">
-        <Obj className="left-[5%] top-[14%] w-[clamp(56px,8vw,120px)]" loop={{ '--dur': '5s', '--delay': '-2s' } as CSSProperties}>
+        <Obj className="left-[5%] top-[14%] hidden md:block w-[clamp(56px,8vw,120px)]" loop={{ '--dur': '5s', '--delay': '-2s' } as CSSProperties}>
           <Headphones />
         </Obj>
-        <Obj className="right-[6%] bottom-[18%] w-[clamp(60px,9vw,140px)]" loop={{ '--dur': '8s', '--delay': '-4s', '--r0': '-30deg', '--r1': '20deg' } as CSSProperties}>
-          <Vinyl phase={1.1} />
+        <Obj className="right-[6%] bottom-[16%] hidden w-[clamp(56px,6vw,100px)] md:block" loop={{ '--dur': '5.6s', '--delay': '-1.4s', '--r0': '8deg', '--r1': '-4deg' } as CSSProperties}>
+          <Speaker phase={0.4} />
         </Obj>
-        <Obj className="right-[12%] top-[10%] hidden w-[clamp(56px,6vw,100px)] md:block" loop={{ '--dur': '5.6s', '--delay': '-1.4s', '--r0': '8deg', '--r1': '-4deg' } as CSSProperties}>
-          <Equalizer phase={0.4} />
-        </Obj>
-        <Obj className="left-[9%] bottom-[14%] hidden w-[clamp(48px,5vw,84px)] md:block" loop={{ '--dur': '4.8s', '--delay': '-3s', '--r0': '-10deg', '--r1': '6deg' } as CSSProperties}>
-          <Note phase={0.5} />
-        </Obj>
+        {/* Linhas com objetos embutidos entre as palavras (referência: bloco "All in" da slush.app) */}
         <h2 className="display-tilt mx-auto max-w-6xl text-[clamp(3.25rem,10.5vw,10rem)] text-ink">
-          <span className="tl block">100 milhões</span>
-          <span className="tl block">
-            de <span className="text-green-deep">músicas</span>
+          <span className="block">
+            <span className="tw">100</span> <Inline><Vinyl phase={1.1} /></Inline> <span className="tw">milhões</span>
           </span>
-          <span className="tl block">sem anúncio</span>
+          <span className="block">
+            <Inline><Note phase={0.5} /></Inline> <span className="tw">de</span> <span className="tw text-green-deep">músicas</span>
+          </span>
+          <span className="block">
+            <span className="tw">sem</span> <span className="tw">anúncio</span> <Inline><Equalizer phase={0.4} /></Inline>
+          </span>
         </h2>
         <p className="mx-auto mt-8 max-w-md text-lg font-semibold">E mais 7 milhões de podcasts, no celular, no computador e na TV.</p>
         <div className="mt-8 flex justify-center">
