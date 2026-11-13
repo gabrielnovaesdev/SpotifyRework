@@ -1,61 +1,12 @@
-import { useEffect, useState } from 'react'
-import { img } from '../lib'
-
 /**
- * Símbolo do Spotify com volume real (referência: o "S" renderizado da slush.app).
- * A imagem `symbol-3d.webp` foi gerada UMA vez com Three.js (src/three/renderSymbol.ts): este
- * mesmo path extrudado com chanfro arredondado, material físico verde com grão fino e luz de
- * estúdio. Em produção é só uma imagem (nada de WebGL rodando); o SVG com filtros de luz fica
- * de reserva se a imagem falhar. Para gerar de novo: `npm run dev` e abrir `/?bake-symbol`
- * (veja tools/bake-symbol.mjs). Decorativo (aria-hidden).
+ * Símbolo do Spotify com volume: preenchimento radial verde, sombreado difuso e brilho
+ * especular gerados pelo próprio SVG (feDiffuseLighting / feSpecularLighting sobre o
+ * alfa desfocado do símbolo) e um grão fino por cima. Sem raster; decorativo.
  */
 const LOGO =
   'M84 0a84 84 0 1 0 0 168A84 84 0 0 0 84 0Zm38.5 121.2a5.2 5.2 0 0 1-7.2 1.7c-19.7-12-44.4-14.7-73.6-8.1a5.2 5.2 0 1 1-2.3-10.2c31.9-7.3 59.3-4.2 81.4 9.3a5.2 5.2 0 0 1 1.7 7.3Zm10.3-22.8a6.5 6.5 0 0 1-9 2.1c-22.5-13.8-56.8-17.8-83.4-9.8a6.5 6.5 0 1 1-3.8-12.5c30.4-9.2 68.2-4.8 94 11.1a6.5 6.5 0 0 1 2.2 9.1Zm.9-23.8C106.7 58.6 62.2 57.1 36.4 65a7.8 7.8 0 1 1-4.5-15c29.6-9 78.8-7.2 109.8 11.2a7.8 7.8 0 0 1-8 13.4Z'
 
 export default function Symbol3D({ className = '' }: { className?: string }) {
-  const [failed, setFailed] = useState(false)
-  useBake()
-  return (
-    <div className={`relative aspect-square ${className}`} aria-hidden="true">
-      {failed ? (
-        <SvgSymbol className="absolute inset-0 h-full w-full" />
-      ) : (
-        <img
-          src={img('symbol-3d.webp')}
-          alt=""
-          width={1400}
-          height={1400}
-          decoding="async"
-          fetchPriority="high"
-          draggable={false}
-          onError={() => setFailed(true)}
-          className="absolute inset-[4%] h-[92%] w-[92%] select-none drop-shadow-[0_28px_36px_rgba(6,40,20,0.22)]"
-        />
-      )}
-    </div>
-  )
-}
-
-/** Só em desenvolvimento, com ?bake-symbol: renderiza o PNG e o expõe para o script de geração. */
-function useBake() {
-  useEffect(() => {
-    if (!import.meta.env.DEV || !location.search.includes('bake-symbol')) return
-    import('../three/renderSymbol').then(async ({ renderSymbol }) => {
-      const blob = await renderSymbol(LOGO, 1400)
-      if (!blob) return
-      const r = new FileReader()
-      r.onload = () => {
-        const out = document.createElement('textarea')
-        out.id = 'bake-out'
-        out.textContent = String(r.result)
-        document.body.append(out)
-      }
-      r.readAsDataURL(blob)
-    })
-  }, [])
-}
-
-function SvgSymbol({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="-24 -24 216 216" className={className} aria-hidden="true">
       <defs>
