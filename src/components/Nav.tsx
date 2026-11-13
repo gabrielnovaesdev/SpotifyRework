@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Logo } from './Icons'
-import { tilt } from '../lib'
+import Pill from './Pill'
 
 const links = [
   { label: 'Benefícios', href: '#beneficios' },
@@ -11,11 +11,10 @@ const links = [
 ]
 
 /**
- * Header persistente que recolhe, como na referência:
- * no topo os links aparecem como etiquetas; ao descer recolhem em cascata e ficam
- * o símbolo, o botão "+" e a fita de ação. Ao subir ou ao abrir pelo "+", voltam em cascata.
- * Mudanças pequenas de direção são amortecidas (8 px) para o header não piscar.
- * No celular a primeira linha fica compacta e os links abrem abaixo dela.
+ * Header flutuante sobre os painéis (referência: slush.app). Símbolo redondo à esquerda;
+ * à direita, links em cápsulas, o botão "+" e a ação principal. Ao descer, os links recolhem
+ * em cascata; ao subir ou no "+", voltam. "+" vira "−"; Esc fecha e devolve o foco.
+ * No celular, a primeira linha fica compacta e os links abrem abaixo dela.
  */
 export default function Nav() {
   const [expanded, setExpanded] = useState(true)
@@ -30,7 +29,6 @@ export default function Nav() {
     }
     sync()
     mq.addEventListener('change', sync)
-
     let last = window.scrollY
     let acc = 0
     const onScroll = () => {
@@ -62,28 +60,26 @@ export default function Nav() {
   const close = () => !desktop.current && setExpanded(false)
 
   return (
-    <header className="nav sticky top-0 z-50" data-shown={expanded}>
-      <nav className="wall-x flex min-h-16 flex-wrap items-center gap-x-2 py-3" aria-label="Principal">
-        <a href="#topo" className="grid h-11 w-11 shrink-0 place-items-center bg-ink text-paper" aria-label="Spotify — início">
+    <header className="nav pointer-events-none sticky top-0 z-50 -mb-[74px] h-[74px]" data-shown={expanded}>
+      <nav className="pointer-events-auto mx-2 flex flex-wrap items-center gap-2 px-3 py-3 sm:mx-3 sm:px-5" aria-label="Principal">
+        <a href="#topo" className="round text-ink" aria-label="Spotify — início">
           <Logo className="h-6" />
         </a>
 
-        <div className="ml-auto flex items-center gap-2">
-          {/* Desktop: etiquetas de papel que recolhem e voltam em cascata */}
-          <ul className="nav-links hidden md:flex md:items-center md:gap-2" inert={!expanded}>
+        <div className="ml-auto flex items-center gap-1.5">
+          <ul className="nav-links hidden md:flex md:items-center md:gap-1.5" inert={!expanded}>
             {links.map((l, i) => (
               <li key={l.href} style={{ '--i': i, '--n': links.length } as CSSProperties}>
-                <a href={l.href} className="nav-tag">
+                <a href={l.href} className="nav-pill">
                   {l.label}
                 </a>
               </li>
             ))}
           </ul>
-
           <button
             ref={toggle}
             type="button"
-            className="nav-toggle"
+            className="round"
             aria-expanded={expanded}
             aria-controls="nav-mobile"
             aria-label={expanded ? 'Recolher navegação' : 'Mostrar navegação'}
@@ -92,18 +88,16 @@ export default function Nav() {
             <span className="nav-toggle__h" />
             <span className="nav-toggle__v" />
           </button>
-
-          <a href="#planos" data-frame className="tape whitespace-nowrap bg-yellow py-2 text-base text-ink" style={tilt(-1.5)}>
+          <Pill href="#planos" data-frame tone="dark" accent="green" size="sm">
             Começar grátis
-          </a>
+          </Pill>
         </div>
 
-        {/* Celular: links distribuídos abaixo da primeira linha quando abertos */}
         <div id="nav-mobile" className="nav-mobile w-full md:hidden" inert={!expanded}>
-          <ul className="flex flex-wrap gap-2 pt-3">
+          <ul className="flex flex-wrap gap-1.5 rounded-[24px] bg-paper/0 pt-2">
             {links.map((l, i) => (
               <li key={l.href} style={{ '--i': i, '--n': links.length } as CSSProperties}>
-                <a href={l.href} className="nav-tag" onClick={close}>
+                <a href={l.href} className="nav-pill" onClick={close}>
                   {l.label}
                 </a>
               </li>

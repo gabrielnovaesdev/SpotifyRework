@@ -5,6 +5,7 @@
  *
  *   node tools/motion-recorder/sheet.mjs --rec rec/slush-desktop --from 1200 --to 2400 --count 12 [--cols 4] [--out sheet.png]
  *
+ * --crop x,y,w,h (frações 0–1) recorta e amplia uma região.
  * --from/--to em ms (do frames.json) ou --mark nome (+ --span ms). Escolhe frames distribuídos no intervalo.
  * Renderiza a grade numa página local no Chrome headless e salva PNG.
  */
@@ -34,14 +35,19 @@ const cols = +(args.cols || 4)
 const pool = meta.frames.filter((f) => f.t >= from && f.t <= to)
 if (!pool.length) throw new Error('nenhum frame no intervalo')
 const pick = Array.from({ length: Math.min(count, pool.length) }, (_, i) => pool[Math.round((i * (pool.length - 1)) / Math.max(1, Math.min(count, pool.length) - 1))])
+// --crop x,y,w,h em fração do quadro (0–1): amplia uma região (ex.: um objeto) em cada célula
+const crop = args.crop ? String(args.crop).split(',').map(Number) : null
 const cellW = Math.min(480, Math.round(1920 / cols))
-const cellH = Math.round((cellW * meta.h) / meta.w)
+const cellH = crop ? Math.round((cellW * crop[3] * meta.h) / (crop[2] * meta.w)) : Math.round((cellW * meta.h) / meta.w)
+const imgCss = crop
+  ? `position:relative;width:${cellW / crop[2]}px;height:${(cellW / crop[2]) * (meta.h / meta.w)}px;left:${(-crop[0] * cellW) / crop[2]}px;top:${(-crop[1] * cellW * meta.h) / (crop[2] * meta.w)}px`
+  : `width:${cellW}px;height:${cellH}px;object-fit:cover`
 const rows = Math.ceil(pick.length / cols)
 const html = `<!doctype html><meta charset="utf-8"><style>body{margin:0;background:#111;font:600 13px system-ui;color:#fff}
 .g{display:grid;grid-template-columns:repeat(${cols},${cellW}px);gap:6px;padding:6px}
-figure{margin:0}img{display:block;width:${cellW}px;height:${cellH}px;object-fit:cover;outline:1px solid #333}
+figure{margin:0}img{display:block;${imgCss}}.c{width:${cellW}px;height:${cellH}px;overflow:hidden;outline:1px solid #333}
 figcaption{padding:3px 2px}</style><div class="g">${pick
-  .map((f) => `<figure><img src="file:///${path.join(rec, 'frames', f.file).replace(/\\/g, '/')}"><figcaption>#${f.n} · ${f.t} ms · y ${f.scrollY}</figcaption></figure>`)
+  .map((f) => `<figure><div class="c"><img src="file:///${path.join(rec, 'frames', f.file).replace(/\\/g, '/')}"></div><figcaption>#${f.n} · ${f.t} ms · y ${f.scrollY}</figcaption></figure>`)
   .join('')}</div>`
 const tmp = path.join(os.tmpdir(), `sheet-${process.pid}.html`)
 fs.writeFileSync(tmp, html)

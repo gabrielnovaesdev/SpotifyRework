@@ -28,10 +28,10 @@ export default function Moments() {
       const k = i - pos.current.v
       const behind = k < 0
       gsap.set(el, {
-        x: behind ? k * w * 0.18 : k * w * 0.82,
-        y: behind ? Math.abs(k) * 10 : 0,
-        rotate: behind ? k * 6 : k * 1.2,
-        scale: behind ? 1 + k * 0.06 : 1,
+        x: behind ? k * w * 0.14 : k * w * 0.86,
+        y: behind ? Math.abs(k) * 14 : 0,
+        rotate: behind ? k * 5 : k * 1.5,
+        scale: behind ? Math.max(0.7, 1 + k * 0.08) : 1,
         zIndex: 100 - Math.round(Math.abs(k) * 10) - (behind ? 50 : 0),
         autoAlpha: k < -1.6 || k > 3 ? 0 : 1,
       })
@@ -84,21 +84,21 @@ export default function Moments() {
   }
 
   return (
-    <section id="momentos" aria-labelledby="momentos-titulo" className="wall-x py-16 lg:py-24">
-      <div className="poster grid gap-10 overflow-hidden bg-paper p-6 sm:p-10 lg:grid-cols-[0.9fr_1.6fr] lg:items-center lg:p-14">
+    <section id="momentos" aria-labelledby="momentos-titulo" className="panel mt-3 py-20 sm:py-28">
+      <div className="wrap grid gap-12 lg:grid-cols-[0.85fr_1.6fr] lg:items-center">
         <div>
-          <h2 id="momentos-titulo" className="wood text-[clamp(3.5rem,7vw,6.5rem)]">
-            Onde a música <span className="bg-ink px-[0.08em] text-yellow">acontece</span>
+          <h2 id="momentos-titulo" className="display-tilt origin-left text-[clamp(4rem,8vw,8rem)]">
+            Onde a música acontece
           </h2>
-          <p className="mt-5 max-w-sm text-xl font-semibold">Do palco do estádio ao show de bairro: é aqui que a cultura se move.</p>
-          <div className="mt-8 flex items-center gap-2">
-            <button type="button" className="nav-toggle" onClick={() => snap(active - 1)} disabled={active === 0} aria-label="Foto anterior">
-              <IconArrow className="h-5 w-5 rotate-180" />
+          <p className="mt-4 max-w-sm text-lg font-medium">Do palco do estádio ao show de bairro: é aqui que a cultura se move.</p>
+          <div className="mt-7 flex items-center gap-2">
+            <button type="button" className="round" onClick={() => snap(active - 1)} disabled={active === 0} aria-label="Foto anterior">
+              <IconArrow className="h-4 w-4 rotate-180" />
             </button>
-            <button type="button" className="nav-toggle" onClick={() => snap(active + 1)} disabled={active === N - 1} aria-label="Próxima foto">
-              <IconArrow className="h-5 w-5" />
+            <button type="button" className="round" onClick={() => snap(active + 1)} disabled={active === N - 1} aria-label="Próxima foto">
+              <IconArrow className="h-4 w-4" />
             </button>
-            <p className="ml-3 font-mono text-sm font-bold" aria-live="polite">
+            <p className="ml-2 text-sm font-bold tabular-nums" aria-live="polite">
               {active + 1} / {N}
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function Moments() {
 
         <div
           ref={box}
-          className="relative h-[min(118vw,560px)] cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[520px]"
+          className="relative h-[min(120vw,520px)] cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing sm:h-[520px]"
           onPointerDown={down}
           onPointerMove={move}
           onPointerUp={up}
@@ -120,19 +120,19 @@ export default function Moments() {
           aria-roledescription="trilho de fotos"
           aria-label="Fotos de shows. Use as setas para trocar."
         >
-          <ul className="absolute inset-y-0 left-0 w-[min(78%,360px)]">
+          <ul className="absolute inset-y-4 left-[8%] w-[min(76%,340px)]">
             {moments.map((m, i) => (
               <li
                 key={m.src}
                 ref={(el) => {
                   cards.current[i] = el
                 }}
-                className="absolute inset-0 origin-bottom-left will-change-transform"
+                className="absolute inset-0 origin-bottom will-change-transform"
                 aria-hidden={i !== active || undefined}
               >
-                <figure className="poster relative h-full">
+                <figure className="card relative h-full bg-ink">
                   <img src={m.src} alt={m.alt} loading="lazy" draggable={false} className="absolute inset-0 h-full w-full object-cover" />
-                  <figcaption className="absolute bottom-3 left-3 max-w-[85%] bg-ink px-3 py-2 text-sm font-semibold leading-snug text-paper">{m.caption}</figcaption>
+                  <figcaption className="absolute inset-x-3 bottom-3 rounded-2xl bg-paper px-4 py-3 text-sm font-semibold leading-snug text-ink">{m.caption}</figcaption>
                 </figure>
               </li>
             ))}

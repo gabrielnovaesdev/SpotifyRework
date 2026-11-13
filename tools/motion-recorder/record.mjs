@@ -19,6 +19,7 @@
  *   { "drag": "css selector", "dx": -400, "ms": 600 }  arrasta com o mouse a partir do centro
  *   { "swipe": "css selector", "dx": -300, "dy": 0 }   gesto de toque (precisa de --mobile)
  *   { "eval": "js" }                                 roda JS na página
+ *   { "log": "js" }                                  imprime o valor de uma expressão (medições)
  *   { "mark": "nome" }                               marca o tempo no frames.json (para achar trechos)
  */
 import { spawn } from 'node:child_process'
@@ -194,6 +195,7 @@ for (const step of plan) {
     await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   }
   if (step.eval) await evaluate(step.eval)
+  if (step.log) console.log("log:", JSON.stringify(await evaluate(step.log)))
   } catch (err) {
     console.warn('passo ignorado:', JSON.stringify(step), '-', err.message)
   }

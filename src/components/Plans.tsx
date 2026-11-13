@@ -1,58 +1,57 @@
-import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { gsap, prefersReducedMotion, tilt } from '../lib'
-import { dur, ease } from '../motion'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
+import { gsap, prefersReducedMotion } from '../lib'
+import Pill from './Pill'
 import { IconArrow, IconCheck } from './Icons'
+import { Cassette, Headphones, Mic, Vinyl } from './Stickers'
 
-type Plan = { id: string; name: string; price: string; who: string; bg: string; ink: string; features: string[]; terms: string }
+type Plan = { id: string; name: string; price: string; who: string; bg: string; features: string[]; terms: string; obj: ReactNode; accent: 'green' | 'pink' | 'yellow' | 'lavender' }
 
 const plans: Plan[] = [
   {
-    id: 'individual', name: 'Individual', price: '21,90', who: '1 conta', bg: 'bg-yellow', ink: 'text-ink',
+    id: 'individual', name: 'Individual', price: '21,90', who: '1 conta', bg: 'bg-green', obj: <Headphones />, accent: 'yellow',
     features: ['1 conta Premium', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
     terms: 'R$ 0 por 1 mês, depois R$ 21,90 por mês. Só para quem nunca teve Premium.',
   },
   {
-    id: 'duo', name: 'Duo', price: '27,90', who: '2 contas', bg: 'bg-pink', ink: 'text-ink',
+    id: 'duo', name: 'Duo', price: '27,90', who: '2 contas', bg: 'bg-pink', obj: <Mic />, accent: 'green',
     features: ['2 contas Premium', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
     terms: 'Para duas pessoas que moram no mesmo endereço. Sujeito a termos.',
   },
   {
-    id: 'familia', name: 'Família', price: '34,90', who: 'até 6 contas', bg: 'bg-green', ink: 'text-ink',
+    id: 'familia', name: 'Família', price: '34,90', who: 'até 6 contas', bg: 'bg-yellow', obj: <Vinyl />, accent: 'pink',
     features: ['Até 6 contas Premium', 'Controle de conteúdo explícito', 'Cancele quando quiser'],
     terms: 'Para até 6 pessoas que moram no mesmo endereço. Sujeito a termos.',
   },
   {
-    id: 'universitario', name: 'Universitário', price: '11,90', who: '1 conta verificada', bg: 'bg-paper', ink: 'text-ink',
+    id: 'universitario', name: 'Universitário', price: '11,90', who: '1 conta verificada', bg: 'bg-lavender', obj: <Cassette />, accent: 'lavender',
     features: ['1 conta Premium verificada', 'Desconto para estudantes', 'Cancele quando quiser'],
     terms: 'Para estudantes de ensino superior credenciado, com verificação anual.',
   },
 ]
 
 /**
- * Planos como abas (referência #9): as tirinhas destacáveis são as abas. Um indicador preto
- * desliza até a tirinha escolhida; cor do cartaz, nome, preço, benefícios e ação trocam juntos,
- * entrando da esquerda com desfoque curto. Cliques seguidos interrompem a troca anterior.
- * Semântica de abas: tablist / tab / tabpanel, setas do teclado e um único painel ativo.
+ * Planos em abas (referência: "Slush is always within reach"). A cápsula preta desliza no
+ * seletor com mola; cor, imagem, título e texto trocam juntos: a imagem sai e entra com
+ * deslocamento, o título chega da esquerda com desfoque. Cliques seguidos interrompem a troca
+ * anterior. Semântica: tablist / tab / tabpanel, setas, Home/End e um único painel ativo.
  */
 export default function Plans() {
   const [sel, setSel] = useState(0)
-  const strips = useRef<(HTMLButtonElement | null)[]>([])
+  const tabs = useRef<(HTMLButtonElement | null)[]>([])
   const panel = useRef<HTMLDivElement>(null)
-  const [ind, setInd] = useState({ x: 0, y: 0, w: 0, h: 0 })
+  const [ind, setInd] = useState({ x: 0, w: 0 })
   const p = plans[sel]
 
-  // Indicador deslizante: mede a tirinha ativa (2x2 no celular, 4 colunas no desktop)
   useLayoutEffect(() => {
     const measure = () => {
-      const b = strips.current[sel]
-      if (b) setInd({ x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight })
+      const b = tabs.current[sel]
+      if (b) setInd({ x: b.offsetLeft, w: b.offsetWidth })
     }
     measure()
     window.addEventListener('resize', measure)
     return () => window.removeEventListener('resize', measure)
   }, [sel])
 
-  // Troca sincronizada do conteúdo
   const first = useRef(true)
   useEffect(() => {
     if (first.current) {
@@ -60,101 +59,93 @@ export default function Plans() {
       return
     }
     if (prefersReducedMotion() || !panel.current) return
-    gsap.fromTo(
-      panel.current.querySelectorAll('.pl-anim'),
-      { x: -36, autoAlpha: 0, filter: 'blur(8px)' },
-      { x: 0, autoAlpha: 1, filter: 'blur(0px)', duration: dur.slide * 0.75, ease: ease.out, stagger: 0.05, overwrite: true, clearProps: 'filter' },
-    )
+    const q = gsap.utils.selector(panel.current)
+    gsap.timeline({ defaults: { overwrite: true } })
+      .fromTo(q('.pl-media'), { xPercent: -8, autoAlpha: 0, scale: 0.96 }, { xPercent: 0, autoAlpha: 1, scale: 1, duration: 0.6, ease: 'power3.out' }, 0)
+      .fromTo(q('.pl-title'), { x: -60, autoAlpha: 0, filter: 'blur(10px)' }, { x: 0, autoAlpha: 1, filter: 'blur(0px)', duration: 0.6, ease: 'power3.out', clearProps: 'filter' }, 0.05)
+      .fromTo(q('.pl-text'), { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.04, ease: 'power3.out' }, 0.15)
   }, [sel])
 
   const onKey = (e: KeyboardEvent<HTMLButtonElement>) => {
-    const k = e.key
     const n = plans.length
-    const next =
-      k === 'ArrowRight' || k === 'ArrowDown' ? (sel + 1) % n : k === 'ArrowLeft' || k === 'ArrowUp' ? (sel - 1 + n) % n : k === 'Home' ? 0 : k === 'End' ? n - 1 : -1
+    const k = e.key
+    const next = k === 'ArrowRight' ? (sel + 1) % n : k === 'ArrowLeft' ? (sel - 1 + n) % n : k === 'Home' ? 0 : k === 'End' ? n - 1 : -1
     if (next < 0) return
     e.preventDefault()
     setSel(next)
-    strips.current[next]?.focus()
+    tabs.current[next]?.focus()
   }
 
   return (
-    <section id="planos" aria-labelledby="planos-titulo" className="wall-x py-16 lg:py-24">
-      <div className="grid gap-4 sm:gap-5 lg:grid-cols-12">
-        <div className="poster bg-ink p-6 text-paper sm:p-10 lg:col-span-4 lg:self-start">
-          <h2 id="planos-titulo" className="wood text-[clamp(3.25rem,5.6vw,5.5rem)]">
-            Destaque o seu plano
-          </h2>
-          <p className="mt-5 text-lg font-semibold leading-snug">
-            Escolha uma tirinha. Todo plano começa com 1 mês por R$ 0 e pode ser cancelado quando quiser.
-          </p>
-          <p className="mt-6 text-sm text-paper/80">Pix, cartão, PayPal ou boleto.</p>
+    <section id="planos" aria-labelledby="planos-titulo" className="panel mt-3 py-20 sm:py-28">
+      <div className="wrap">
+        <h2 id="planos-titulo" className="text-center text-[clamp(1.9rem,3.4vw,3.25rem)] font-semibold leading-tight tracking-tight">
+          Um plano Premium para cada situação
+        </h2>
+
+        <div className="mt-8 flex justify-center">
+          <div role="tablist" aria-label="Planos" className="relative flex max-w-full overflow-x-auto rounded-full border-2 border-ink bg-paper p-1 [scrollbar-width:none]">
+            <span aria-hidden="true" className="tab-ind absolute bottom-1 left-0 top-1 rounded-full bg-ink" style={{ transform: `translateX(${ind.x}px)`, width: ind.w }} />
+            {plans.map((q, i) => (
+              <button
+                key={q.id}
+                ref={(el) => {
+                  tabs.current[i] = el
+                }}
+                type="button"
+                role="tab"
+                id={`tab-${q.id}`}
+                aria-selected={i === sel}
+                aria-controls="plano-painel"
+                tabIndex={i === sel ? 0 : -1}
+                onClick={() => setSel(i)}
+                onKeyDown={onKey}
+                className={`relative z-10 min-h-11 shrink-0 rounded-full px-4 text-[0.8125rem] font-extrabold uppercase tracking-[0.03em] transition-colors duration-300 sm:px-6 ${
+                  i === sel ? 'text-paper' : 'text-ink hover:bg-ink/5'
+                }`}
+              >
+                {q.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <article className={`poster ${p.bg} ${p.ink} relative z-10 flex flex-col transition-colors duration-500 lg:col-span-8 lg:-ml-8 lg:mt-16 lg:rotate-[0.6deg]`}>
-          <div ref={panel} role="tabpanel" id="plano-painel" aria-labelledby={`tab-${p.id}`} tabIndex={0} className="grid flex-1 gap-8 p-6 sm:p-10 md:grid-cols-[1.3fr_1fr]">
-            <div>
-              <h3 className="pl-anim wood text-[clamp(4rem,9vw,8.5rem)]">{p.name}</h3>
-              <p className="pl-anim mt-4 flex items-baseline gap-2">
-                <span className="text-2xl font-extrabold">R$</span>
-                <span className="wood text-[clamp(4rem,8vw,7rem)]">{p.price}</span>
-                <span className="text-xl font-bold">/mês, {p.who}</span>
-              </p>
-            </div>
-            <div className="flex flex-col justify-between gap-6">
-              <ul className="space-y-3">
-                {p.features.map((f) => (
-                  <li key={p.id + f} className="pl-anim flex items-start gap-3 text-lg font-semibold">
-                    <IconCheck className="mt-1 h-5 w-5 shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <div className="pl-anim">
-                <a href="https://www.spotify.com/br-pt/premium/" target="_blank" rel="noopener noreferrer" className="tape whitespace-nowrap bg-ink px-5 text-base text-paper" style={tilt(-1.5)}>
-                  Começar o {p.name} <IconArrow className="h-5 w-5" />
-                </a>
-                <p className="mt-4 text-sm leading-snug">{p.terms}</p>
+        <div ref={panel} role="tabpanel" id="plano-painel" aria-labelledby={`tab-${p.id}`} tabIndex={0} className="mt-12 grid items-center gap-10 md:grid-cols-2 lg:gap-20">
+          <div className={`pl-media card relative grid aspect-[5/4] place-items-center overflow-hidden transition-colors duration-500 ${p.bg}`}>
+            <p className="display text-[clamp(5rem,12vw,10rem)] leading-none text-ink">
+              <span className="align-top text-[0.32em]">R$</span>
+              {p.price}
+            </p>
+            <div className="pointer-events-none absolute bottom-[8%] right-[8%] w-[24%]">
+              <div className="loop-bob" style={{ '--dur': '5s' } as CSSProperties}>
+                {p.obj}
               </div>
             </div>
           </div>
-
-          {/* Tirinhas destacáveis = abas */}
-          <div role="tablist" aria-label="Planos" className="relative grid grid-cols-2 border-t-2 border-dashed border-ink/50 sm:grid-cols-4">
-            <span
-              aria-hidden="true"
-              className="strip-ind absolute left-0 top-0 bg-ink"
-              style={{ transform: `translate3d(${ind.x}px, ${ind.y + 12}px, 0)`, width: ind.w, height: ind.h }}
-            />
-            {plans.map((q, i) => {
-              const on = i === sel
-              return (
-                <button
-                  key={q.id}
-                  ref={(el) => {
-                    strips.current[i] = el
-                  }}
-                  type="button"
-                  role="tab"
-                  id={`tab-${q.id}`}
-                  aria-selected={on}
-                  aria-controls="plano-painel"
-                  tabIndex={on ? 0 : -1}
-                  onClick={() => setSel(i)}
-                  onKeyDown={onKey}
-                  className={`group relative z-10 flex min-h-28 flex-col items-center justify-center gap-1 border-dashed border-ink/50 px-2 py-4 text-center transition-[color,transform] duration-300 ease-(--ease-paste) odd:border-r-2 nth-[n+3]:border-t-2 sm:min-h-32 sm:nth-[n+3]:border-t-0 sm:not-last:border-r-2 ${
-                    on ? 'translate-y-3 text-paper' : 'hover:-translate-y-0.5'
-                  }`}
-                >
-                  <span className="wood text-2xl sm:text-3xl">{q.name}</span>
-                  <span className="text-sm font-bold">R$ {q.price}</span>
-                </button>
-              )
-            })}
+          <div>
+            <h3 className="pl-title display text-[clamp(4rem,8vw,7.5rem)]">{p.name}</h3>
+            <p className="pl-text mt-2 text-lg font-semibold">R$ {p.price}/mês, {p.who}</p>
+            <ul className="mt-6 space-y-3">
+              {p.features.map((f) => (
+                <li key={p.id + f} className="pl-text flex items-start gap-3 text-lg">
+                  <IconCheck className="mt-1 h-5 w-5 shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <div className="pl-text mt-8">
+              <Pill href="https://www.spotify.com/br-pt/premium/" target="_blank" rel="noopener noreferrer" tone="dark" accent={p.accent} icon={<IconArrow className="h-4 w-4" />}>
+                Começar o {p.name}
+              </Pill>
+            </div>
+            <p className="pl-text mt-5 max-w-md text-sm text-ink/70">{p.terms}</p>
           </div>
-        </article>
+        </div>
+
+        <p className="mt-12 text-center text-sm font-semibold text-ink/70">
+          Pix, cartão, PayPal ou boleto. Valores de referência para fins de estudo. Projeto educacional sem vínculo com a Spotify AB.
+        </p>
       </div>
-      <p className="mt-6 text-center text-sm font-semibold">Valores de referência para fins de estudo. Projeto educacional sem vínculo com a Spotify AB.</p>
     </section>
   )
 }
