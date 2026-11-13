@@ -1,200 +1,208 @@
-import { useCallback, useEffect, useRef, useState, type ComponentType, type KeyboardEvent, type PointerEvent } from 'react'
-import { gsap, prefersReducedMotion, tilt } from '../lib'
-import { autoplayMs, dur, ease } from '../motion'
-import { IconArrow, IconDownload, IconFriends, IconNoAds, IconQuality, IconQueue, IconShuffle } from './Icons'
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react'
+import { gsap, prefersReducedMotion } from '../lib'
+import Pill from './Pill'
+import { IconArrow } from './Icons'
+import { Cassette, Headphones, Mic, Note, PlayBtn, Vinyl } from './Stickers'
 
-type Bill = { word: string; line: string; bg: string; ink: string; Icon: ComponentType<{ className?: string }> }
-
+type Bill = { word: string; line: string; bg: string; obj: ReactNode }
 const bills: Bill[] = [
-  { word: 'Sem anúncio', line: 'Nada entre uma faixa e outra. Só música, do começo ao fim.', bg: 'bg-pink', ink: 'text-ink', Icon: IconNoAds },
-  { word: 'Offline', line: 'Baixe suas playlists e ouça no metrô, no avião ou sem sinal.', bg: 'bg-paper', ink: 'text-ink', Icon: IconDownload },
-  { word: 'Na ordem que quiser', line: 'Qualquer música, de qualquer álbum, a qualquer momento.', bg: 'bg-yellow', ink: 'text-ink', Icon: IconShuffle },
-  { word: 'Áudio superior', line: 'Mais detalhe e definição, até em lossless nos aparelhos compatíveis.', bg: 'bg-ink', ink: 'text-paper', Icon: IconQuality },
-  { word: 'Jam', line: 'Crie uma Jam e deixe todo mundo escolher as próximas faixas.', bg: 'bg-green', ink: 'text-ink', Icon: IconFriends },
-  { word: 'Sua fila', line: 'Arraste, reordene e monte a sequência perfeita para cada momento.', bg: 'bg-paper', ink: 'text-ink', Icon: IconQueue },
+  { word: 'Sem anúncio', line: 'Nada entre uma faixa e outra.', bg: 'bg-green', obj: <PlayBtn /> },
+  { word: 'Baixe e ouça offline', line: 'No metrô, no avião ou sem sinal.', bg: 'bg-yellow', obj: <Cassette /> },
+  { word: 'Na ordem que quiser', line: 'Qualquer música, a qualquer hora.', bg: 'bg-sky', obj: <Note /> },
+  { word: 'Áudio superior', line: 'Até em lossless nos aparelhos compatíveis.', bg: 'bg-lavender', obj: <Headphones /> },
+  { word: 'Ouça numa Jam', line: 'Todo mundo escolhe a próxima.', bg: 'bg-pink', obj: <Mic /> },
+  { word: 'Monte sua fila', line: 'Arraste e reordene do seu jeito.', bg: 'bg-orange', obj: <Vinyl /> },
 ]
 const N = bills.length
-// Três cópias da lista: a do meio é a "real"; as laterais só preenchem os vizinhos cortados.
-const track = [...bills, ...bills, ...bills]
+const AUTOPLAY = 4500 // 4–5 s, como na referência
+
+/** distância circular de i até p, em (-N/2, N/2] */
+const wrapD = (d: number) => {
+  const m = (((d + N / 2) % N) + N) % N
+  return m - N / 2
+}
 
 /**
- * Carrossel central de benefícios (referência #7): introdução com ação, cartazes vizinhos
- * parcialmente visíveis, bullets sincronizados e avanço automático com pausa
- * (hover, foco, toque e botão). Setas do teclado, swipe e arraste com o mouse.
+ * Carrossel central infinito (referência: "Earn, swap, and explore" da slush.app).
+ * Uma posição contínua `p` (em cartões) move todos os cartões; cada um se coloca pela
+ * distância circular até `p`, então o último e o primeiro passam um pelo outro sem salto
+ * nem lacuna, por quantas voltas o arraste quiser. Soltar aplica inércia e assenta no
+ * cartão mais próximo. Avança sozinho a cada 4,5 s, pausando com hover, foco, toque,
+ * fora da tela e pelo botão.
  */
 export default function BenefitsCarousel() {
-  const [index, setIndex] = useState(N) // posição na trilha (começa na cópia do meio)
+  const vp = useRef<HTMLDivElement>(null)
+  const cards = useRef<(HTMLLIElement | null)[]>([])
+  const pos = useRef({ p: 0 })
+  const [active, setActive] = useState(0)
   const [playing, setPlaying] = useState(true)
-  const [hold, setHold] = useState(false) // pausa temporária: hover, foco ou fora da tela
-  const viewport = useRef<HTMLDivElement>(null)
-  const rail = useRef<HTMLDivElement>(null)
-  const drag = useRef<{ x: number; dx: number; id: number } | null>(null)
-  const active = ((index % N) + N) % N
+  const [hold, setHold] = useState(false)
+  const drag = useRef<{ x: number; start: number; lastX: number; lastT: number; v: number; moved: boolean; id: number } | null>(null)
+
+  const layout = () => {
+    const el = vp.current
+    if (!el) return
+    const first = cards.current[0]
+    const w = first?.offsetWidth ?? 360
+    const step = w + (window.innerWidth < 640 ? 12 : 20)
+    const cx = el.clientWidth / 2 - w / 2
+    cards.current.forEach((c, i) => {
+      if (!c) return
+      const d = wrapD(i - pos.current.p)
+      gsap.set(c, { x: cx + d * step, rotate: d * 1.5, zIndex: 10 - Math.round(Math.abs(d)) })
+    })
+    const a = ((Math.round(pos.current.p) % N) + N) % N
+    setActive((prev) => (prev === a ? prev : a))
+  }
+
+  const goTo = (target: number, duration = 0.75) => {
+    gsap.to(pos.current, {
+      p: target,
+      duration: prefersReducedMotion() ? 0 : duration,
+      ease: 'power3.out',
+      overwrite: true,
+      onUpdate: layout,
+    })
+  }
+  const step = (d: number) => goTo(Math.round(pos.current.p) + d)
 
   useEffect(() => {
+    layout()
     if (prefersReducedMotion()) setPlaying(false)
+    window.addEventListener('resize', layout)
+    return () => window.removeEventListener('resize', layout)
   }, [])
 
-  // Centraliza o cartaz ativo
-  const place = useCallback(
-    (i: number, animate: boolean) => {
-      const vp = viewport.current
-      const r = rail.current
-      if (!vp || !r) return
-      const card = r.children[i] as HTMLElement
-      const x = vp.clientWidth / 2 - (card.offsetLeft + card.offsetWidth / 2)
-      const instant = !animate || prefersReducedMotion()
-      gsap.to(r, {
-        x,
-        duration: instant ? 0 : dur.slide,
-        ease: ease.inOut,
-        overwrite: true,
-        onComplete: () => {
-          // fora da cópia do meio: volta para o equivalente nela, sem animar
-          if (i < N || i >= 2 * N) setIndex(((i % N) + N) % N + N)
-        },
-      })
-    },
-    [],
-  )
-
-  const first = useRef(true)
-  useEffect(() => {
-    place(index, !first.current)
-    first.current = false
-  }, [index, place])
-
-  useEffect(() => {
-    const onResize = () => place(index, false)
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [index, place])
-
-  // Avanço automático
   useEffect(() => {
     if (!playing || hold) return
-    const id = window.setTimeout(() => setIndex((i) => i + 1), autoplayMs)
-    return () => window.clearTimeout(id)
-  }, [playing, hold, index])
+    const id = window.setInterval(() => step(1), AUTOPLAY)
+    return () => window.clearInterval(id)
+  }, [playing, hold])
 
-  // Pausa fora da tela
   useEffect(() => {
-    const el = viewport.current
+    const el = vp.current
     if (!el) return
     const io = new IntersectionObserver(([e]) => setHold(!e.isIntersecting))
     io.observe(el)
     return () => io.disconnect()
   }, [])
 
-  const go = (d: number) => setIndex((i) => i + d)
-  const onKey = (e: KeyboardEvent) => {
-    if (e.key === 'ArrowRight') (e.preventDefault(), go(1))
-    if (e.key === 'ArrowLeft') (e.preventDefault(), go(-1))
-  }
-
-  // Swipe / arraste horizontal; gesto vertical continua rolando a página (touch-action: pan-y)
   const down = (e: PointerEvent) => {
-    drag.current = { x: e.clientX, dx: 0, id: e.pointerId }
+    gsap.killTweensOf(pos.current)
+    drag.current = { x: e.clientX, start: pos.current.p, lastX: e.clientX, lastT: performance.now(), v: 0, moved: false, id: e.pointerId }
     setHold(true)
   }
   const move = (e: PointerEvent) => {
     const d = drag.current
     if (!d || d.id !== e.pointerId) return
-    d.dx = e.clientX - d.x
-    if (Math.abs(d.dx) > 6) gsap.set(rail.current, { x: `+=${e.movementX}` })
+    const w = (cards.current[0]?.offsetWidth ?? 360) + 20
+    const now = performance.now()
+    const inst = (e.clientX - d.lastX) / Math.max(1, now - d.lastT)
+    d.v = d.v * 0.6 + inst * 0.4 // px/ms suavizado
+    d.lastX = e.clientX
+    d.lastT = now
+    if (Math.abs(e.clientX - d.x) > 4) d.moved = true
+    pos.current.p = d.start - (e.clientX - d.x) / w
+    layout()
   }
   const up = () => {
     const d = drag.current
     drag.current = null
     setHold(false)
     if (!d) return
-    if (Math.abs(d.dx) > 50) go(d.dx < 0 ? 1 : -1)
-    else place(index, true)
+    const w = (cards.current[0]?.offsetWidth ?? 360) + 20
+    // inércia: a velocidade projeta a posição ~300 ms à frente, depois assenta num cartão
+    const projected = pos.current.p - (d.v * 300) / w
+    goTo(Math.round(projected), 0.9)
+  }
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') (e.preventDefault(), step(1))
+    if (e.key === 'ArrowLeft') (e.preventDefault(), step(-1))
   }
 
   return (
-    <section id="beneficios" aria-labelledby="beneficios-titulo" className="wall-x py-16 lg:py-24">
-      <div className="poster bg-paper px-0 py-12 sm:py-16">
-        <div className="px-6 text-center sm:px-10">
-          <h2 id="beneficios-titulo" className="wood mx-auto max-w-4xl text-[clamp(3rem,7vw,6rem)]">
-            Seis motivos colados no muro
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg font-semibold">Tudo o que o Premium tira do seu caminho, e o que ele coloca no lugar.</p>
-          <a href="#planos" data-frame className="tape mt-6 bg-ink text-paper" style={tilt(-1.5)}>
+    <section id="beneficios" aria-labelledby="beneficios-titulo" className="panel mt-3 py-20 sm:py-28">
+      <div className="wrap text-center">
+        <h2 id="beneficios-titulo" className="mx-auto max-w-3xl text-[clamp(1.9rem,3.4vw,3.25rem)] font-semibold leading-[1.1] tracking-tight">
+          Ouça, descubra e monte sua trilha sonora, sem nada no caminho
+        </h2>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <Pill href="#planos" data-frame tone="light" accent="green" size="sm">
             Ver os planos
-          </a>
+          </Pill>
+          <Pill href="https://www.spotify.com/br-pt/download/" target="_blank" rel="noopener noreferrer" tone="light" accent="yellow" size="sm">
+            Baixar o app
+          </Pill>
         </div>
+      </div>
 
-        <div
-          ref={viewport}
-          role="region"
-          aria-roledescription="carrossel"
-          aria-label="Benefícios do Premium"
-          tabIndex={0}
-          onKeyDown={onKey}
-          onMouseEnter={() => setHold(true)}
-          onMouseLeave={() => setHold(false)}
-          onFocus={() => setHold(true)}
-          onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setHold(false)}
-          className="mt-12 cursor-grab touch-pan-y overflow-hidden select-none active:cursor-grabbing"
-          onPointerDown={down}
-          onPointerMove={move}
-          onPointerUp={up}
-          onPointerCancel={up}
-        >
-          <div ref={rail} className="flex w-max gap-4 sm:gap-5" aria-live={playing && !hold ? 'off' : 'polite'}>
-            {track.map((b, i) => {
-              const real = i >= N && i < 2 * N
-              const on = i === index
-              return (
-                <article
-                  key={i}
-                  role={real ? 'group' : undefined}
-                  aria-roledescription={real ? 'slide' : undefined}
-                  aria-label={real ? `${(i % N) + 1} de ${N}: ${b.word}` : undefined}
-                  aria-hidden={!real || undefined}
-                  inert={!on}
-                  className={`car-card poster ${b.bg} ${b.ink} flex aspect-[4/5] w-[min(78vw,360px)] shrink-0 flex-col justify-between p-6 sm:p-8 ${on ? 'is-on' : ''}`}
-                >
-                  <h3 className="wood text-[clamp(2.75rem,4.4vw,4.25rem)]">{b.word}</h3>
-                  <b.Icon className="car-icon h-20 w-20 self-end" />
-                  <p className="text-lg font-semibold leading-snug">{b.line}</p>
-                </article>
-              )
-            })}
-          </div>
-        </div>
+      <div
+        ref={vp}
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Benefícios do Premium"
+        tabIndex={0}
+        onKeyDown={onKey}
+        onMouseEnter={() => setHold(true)}
+        onMouseLeave={() => setHold(false)}
+        onFocus={() => setHold(true)}
+        onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setHold(false)}
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+        className="relative mt-14 h-[min(108vw,440px)] cursor-grab touch-pan-y select-none overflow-hidden active:cursor-grabbing sm:h-[440px]"
+      >
+        <ul>
+          {bills.map((b, i) => (
+            <li
+              key={b.word}
+              ref={(el) => {
+                cards.current[i] = el
+              }}
+              aria-roledescription="slide"
+              aria-label={`${i + 1} de ${N}: ${b.word}`}
+              aria-hidden={i !== active || undefined}
+              className={`card absolute left-0 top-0 flex h-full w-[min(80vw,400px)] flex-col justify-between p-7 will-change-transform ${b.bg}`}
+            >
+              <h3 className="display-tilt origin-left text-[clamp(3rem,5vw,4.5rem)] text-ink">{b.word}</h3>
+              <div className="flex items-end justify-between gap-4">
+                <p className="max-w-[60%] text-base font-semibold leading-snug">{b.line}</p>
+                <div className="w-[34%]">
+                  <div className="loop-bob" style={{ '--dur': `${4 + (i % 3)}s`, '--delay': `-${i * 0.7}s` } as CSSProperties}>
+                    {b.obj}
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        <div className="mt-8 flex items-center justify-center gap-3 px-6">
-          <button type="button" className="nav-toggle" onClick={() => go(-1)} aria-label="Benefício anterior">
-            <IconArrow className="h-5 w-5 rotate-180" />
-          </button>
-          <div className="flex items-center gap-1" role="group" aria-label="Escolher benefício">
-            {bills.map((b, i) => (
-              <button
-                key={b.word}
-                type="button"
-                onClick={() => setIndex(N + i)}
-                aria-label={`Benefício ${i + 1}: ${b.word}`}
-                aria-current={i === active || undefined}
-                className="grid h-11 w-8 place-items-center"
-              >
-                <span className={`block h-2 rounded-full bg-ink transition-[width,opacity] duration-300 ${i === active ? 'w-7 opacity-100' : 'w-2 opacity-40'}`} />
-              </button>
-            ))}
-          </div>
-          <button type="button" className="nav-toggle" onClick={() => go(1)} aria-label="Próximo benefício">
-            <IconArrow className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            className="nav-toggle ml-2 w-auto px-3 text-sm font-extrabold uppercase"
-            onClick={() => setPlaying((p) => !p)}
-            aria-pressed={!playing}
-          >
-            {playing ? 'Pausar' : 'Tocar'}
-          </button>
+      <div className="mt-8 flex items-center justify-center gap-2 px-5">
+        <button type="button" className="round" onClick={() => step(-1)} aria-label="Benefício anterior">
+          <IconArrow className="h-4 w-4 rotate-180" />
+        </button>
+        <div className="flex items-center" role="group" aria-label="Escolher benefício">
+          {bills.map((b, i) => (
+            <button
+              key={b.word}
+              type="button"
+              onClick={() => goTo(Math.round(pos.current.p) + ((((i - active) % N) + N + N / 2) % N) - N / 2)}
+              aria-label={`Benefício ${i + 1}: ${b.word}`}
+              aria-current={i === active || undefined}
+              className="grid h-11 w-7 place-items-center"
+            >
+              <span className={`block h-2 rounded-full bg-ink transition-[width,opacity] duration-300 ${i === active ? 'w-6' : 'w-2 opacity-30'}`} />
+            </button>
+          ))}
         </div>
+        <button type="button" className="round" onClick={() => step(1)} aria-label="Próximo benefício">
+          <IconArrow className="h-4 w-4" />
+        </button>
+        <button type="button" className="nav-pill ml-2" onClick={() => setPlaying((p) => !p)} aria-pressed={!playing}>
+          {playing ? 'Pausar' : 'Tocar'}
+        </button>
       </div>
     </section>
   )

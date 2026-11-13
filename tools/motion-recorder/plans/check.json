@@ -1,0 +1,8 @@
+[
+  { "wait": 3500 },
+  { "log": "({w: innerWidth, sw: document.documentElement.scrollWidth, overflow: document.documentElement.scrollWidth > innerWidth})" },
+  { "log": "new Promise(r=>{let n=0,t0=performance.now();const f=()=>{n++; if(performance.now()-t0<2000) requestAnimationFrame(f); else r({fpsHero: Math.round(n/2)})};requestAnimationFrame(f)})" },
+  { "log": "new Promise(r=>{let n=0,t0=performance.now(),y=0;const f=()=>{n++; y+=12; scrollTo(0,y); if(performance.now()-t0<4000) requestAnimationFrame(f); else r({fpsScroll: Math.round(n/4), y})};requestAnimationFrame(f)})" },
+  { "log": "({sw: document.documentElement.scrollWidth, overflow: document.documentElement.scrollWidth > innerWidth, offscreen: document.querySelectorAll('.is-offscreen').length})" },
+  { "log": "[...document.querySelectorAll('.h-obj')].map(e=>getComputedStyle(e).opacity).join(',')" }
+]

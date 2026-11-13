@@ -8,7 +8,7 @@ export default function AnnounceBar() {
   return (
     <a
       href="#planos"
-      className="group relative block h-8 overflow-hidden bg-pink text-ink"
+      className="group relative block h-8 overflow-hidden bg-lavender text-ink"
       aria-label="Premium: 1 mês por R$ 0. Ver os planos"
     >
       <span className="marquee flex h-full w-max items-center" aria-hidden="true">
