@@ -32,6 +32,10 @@ export default function Nav() {
     if (open) lenis?.stop()
     else lenis?.start()
     document.body.style.overflow = open ? 'hidden' : ''
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
   return (
@@ -41,7 +45,7 @@ export default function Nav() {
       } ${scrolled || open ? 'bg-black/70 backdrop-blur-xl' : 'bg-transparent'}`}
     >
       <nav className="container-x flex h-16 items-center justify-between lg:h-20" aria-label="Principal">
-        <a href="#topo" className="text-white transition-opacity hover:opacity-80" aria-label="Spotify — início">
+        <a href="#topo" className="inline-flex h-11 items-center text-white transition-opacity hover:opacity-80" aria-label="Spotify — início">
           <Wordmark className="h-8 text-[15px]" />
         </a>
 
@@ -50,7 +54,7 @@ export default function Nav() {
             <li key={l.label}>
               <a
                 href={l.href}
-                className="group relative rounded-full px-4 py-2 text-[15px] font-bold text-white/90 transition-colors hover:text-white"
+                className="group relative inline-flex h-11 items-center rounded-full px-4 text-[15px] font-bold text-white/90 transition-colors hover:text-white"
               >
                 {l.label}
                 <span className="absolute inset-x-4 bottom-1 h-px origin-left scale-x-0 bg-green transition-transform duration-300 group-hover:scale-x-100" />
@@ -59,12 +63,12 @@ export default function Nav() {
           ))}
           <li className="mx-3 h-4 w-px bg-white/40" aria-hidden="true" />
           <li>
-            <a href="#planos" className="px-4 py-2 text-[15px] font-bold text-subdued transition-colors hover:text-white">
+            <a href="#planos" className="inline-flex h-11 items-center px-4 text-[15px] font-bold text-subdued transition-colors hover:text-white">
               Inscrever-se
             </a>
           </li>
           <li>
-            <a href="#planos" className="btn btn-light ml-2 px-7 py-2.5 text-[15px]">
+            <a href="#planos" className="btn btn-light ml-2 h-11 px-7 py-0 text-[15px]">
               Entrar
             </a>
           </li>
@@ -75,7 +79,8 @@ export default function Nav() {
           className="relative z-10 grid h-11 w-11 place-items-center md:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label="Alternar navegação"
+          aria-controls="menu-mobile"
+          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
         >
           <span className={`absolute h-0.5 w-6 bg-white transition-transform duration-300 ${open ? 'rotate-45' : '-translate-y-1.5'}`} />
           <span className={`absolute h-0.5 w-6 bg-white transition-transform duration-300 ${open ? '-rotate-45' : 'translate-y-1.5'}`} />
@@ -84,6 +89,8 @@ export default function Nav() {
 
       {/* Menu mobile */}
       <div
+        id="menu-mobile"
+        inert={!open}
         className={`grid overflow-hidden transition-[grid-template-rows] duration-500 ease-(--ease-spring) md:hidden ${
           open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}

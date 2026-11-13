@@ -1,5 +1,4 @@
-import { useRef, type PointerEvent } from 'react'
-import { gsap, ScrollTrigger, useGSAP } from '../lib'
+import { type PointerEvent } from 'react'
 import { RevealHeading } from './Reveal'
 import { IconDownload, IconFriends, IconNoAds, IconQuality, IconQueue, IconShuffle } from './Icons'
 
@@ -19,27 +18,10 @@ function onSpot(e: PointerEvent<HTMLElement>) {
 }
 
 export default function Benefits() {
-  const root = useRef<HTMLElement>(null)
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.set('.benefit', { y: 60, autoAlpha: 0 })
-        ScrollTrigger.batch('.benefit', {
-          start: 'top 90%',
-          onEnter: (els) => gsap.to(els, { y: 0, autoAlpha: 1, duration: 1, ease: 'expo.out', stagger: 0.08, overwrite: true }),
-        })
-      })
-    },
-    { scope: root },
-  )
-
   return (
-    <section ref={root} id="beneficios" className="container-x py-20 sm:py-28">
+    <section id="beneficios" className="container-x py-20 sm:py-28">
       <div className="max-w-3xl">
-        <p className="text-sm font-bold uppercase tracking-[0.18em] text-green">Por que o Premium?</p>
-        <RevealHeading className="mt-4 text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-[-0.045em]">
+        <RevealHeading className="text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-[-0.04em]">
           Benefícios de todos os planos Premium
         </RevealHeading>
       </div>

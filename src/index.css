@@ -31,6 +31,21 @@
   body {
     background: var(--color-base);
     overflow-x: clip;
+    caret-color: var(--color-green);
+  }
+  html {
+    scrollbar-color: #3e3e3e var(--color-base);
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+    border-radius: 6px;
   }
   ::selection {
     background: var(--color-green);
@@ -43,7 +58,7 @@
     @apply mx-auto w-full max-w-[1320px] px-4 sm:px-8 lg:px-12;
   }
   .btn {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-base font-bold tracking-tight transition-[transform,background-color,box-shadow] duration-300 ease-(--ease-spring) will-change-transform active:scale-95;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-base font-bold tracking-tight transition-[transform,background-color,box-shadow] duration-300 ease-(--ease-spring) active:scale-95;
   }
   .btn-light {
     @apply bg-white text-black hover:scale-[1.04] hover:bg-white/90;

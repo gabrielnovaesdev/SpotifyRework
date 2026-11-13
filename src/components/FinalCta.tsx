@@ -33,14 +33,6 @@ export default function FinalCta() {
             scrollTrigger: { trigger: root.current, start: 'top 90%', end: 'top 20%', scrub: true },
           },
         )
-        gsap.from('.cta-inner > *', {
-          y: 50,
-          autoAlpha: 0,
-          stagger: 0.1,
-          duration: 1,
-          ease: 'expo.out',
-          scrollTrigger: { trigger: root.current, start: 'top 45%' },
-        })
         gsap.to('.eq-bar', { scaleY: 1, duration: 0.5, ease: 'sine.inOut', repeat: -1, yoyo: true, stagger: { each: 0.12, from: 'random' } })
       })
     },
@@ -58,7 +50,7 @@ export default function FinalCta() {
               <span key={i} className="eq-bar block h-full w-2 origin-bottom scale-y-[0.3] rounded-full bg-black" />
             ))}
           </div>
-          <h2 className="mt-8 max-w-4xl text-[clamp(2.5rem,7vw,6.5rem)] font-black leading-[0.9] tracking-[-0.055em]">
+          <h2 className="mt-8 max-w-4xl text-[clamp(2.5rem,7vw,6.5rem)] font-black leading-[0.9] tracking-[-0.04em]">
             Sua próxima música favorita está esperando.
           </h2>
           <p className="mt-6 max-w-lg text-lg font-semibold text-black/70">

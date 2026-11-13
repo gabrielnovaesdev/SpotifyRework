@@ -44,8 +44,7 @@ export default function Hero() {
     const v = video.current
     if (!v) return
     if (v.paused) {
-      v.play()
-      setPlaying(true)
+      v.play().then(() => setPlaying(true)).catch(() => setPlaying(false))
     } else {
       v.pause()
       setPlaying(false)
@@ -151,7 +150,7 @@ export default function Hero() {
 
         {/* Título */}
         <div className="hero-copy container-x relative z-10 flex min-h-svh flex-col justify-end pb-14 pt-28 md:justify-center md:pb-0">
-          <h1 className="hero-in text-[clamp(3.25rem,9.2vw,9.5rem)] font-black leading-[0.92] tracking-[-0.05em]">
+          <h1 className="hero-in text-[clamp(3.25rem,9.2vw,9.5rem)] font-black leading-[0.92] tracking-[-0.04em]">
             O lugar definitivo para
             <span className="relative block h-[1.12em] overflow-hidden">
               <span className="sr-only">{keywords.join(', ')}</span>
@@ -182,7 +181,7 @@ export default function Hero() {
             <a href="#planos" className="btn btn-outline">Ver todos os planos</a>
           </div>
           <p className="hero-in mt-6 max-w-sm text-xs leading-relaxed text-white/60">
-            Apenas para o Premium Individual. R$ 0 por 1 mês, depois R$ 23,90 por mês. Oferta disponível apenas para
+            Apenas para o Premium Individual. R$ 0 por 1 mês, depois R$ 21,90 por mês. Oferta disponível apenas para
             quem nunca teve o Premium. Sujeito a Termos.
           </p>
         </div>

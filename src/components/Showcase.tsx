@@ -65,7 +65,7 @@ export default function Showcase() {
             <div className="sc-progress absolute inset-0 origin-top scale-y-0 rounded-full bg-white" />
           </div>
           <div>
-            <h2 className="text-[clamp(3rem,6vw,5.5rem)] font-black leading-none tracking-[-0.05em]">É fácil.</h2>
+            <h2 className="text-[clamp(3rem,6vw,5.5rem)] font-black leading-none tracking-[-0.04em]">É fácil.</h2>
             <div className="relative mt-10 h-56">
               {steps.map((s) => (
                 <div key={s.title} className="sc-step absolute inset-0">
@@ -97,7 +97,7 @@ export default function Showcase() {
 
       {/* Mobile / tablet */}
       <div className="container-x py-20 lg:hidden">
-        <h2 className="text-[clamp(2.75rem,10vw,4rem)] font-black leading-none tracking-[-0.05em]">É fácil.</h2>
+        <h2 className="text-[clamp(2.75rem,10vw,4rem)] font-black leading-none tracking-[-0.04em]">É fácil.</h2>
         <div className="mt-12 space-y-20">
           {steps.map((s) => (
             <div key={s.title} className="sc-mobile grid items-center gap-8 sm:grid-cols-2">

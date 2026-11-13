@@ -86,7 +86,7 @@ export default function Spotlight() {
           </g>
         </svg>
 
-        <h2 className="sp-title relative -mt-[clamp(4rem,12vw,9rem)] text-[clamp(2.5rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.05em] [text-shadow:0_8px_40px_rgba(0,0,0,0.6)]">
+        <h2 className="sp-title relative -mt-[clamp(4rem,12vw,9rem)] text-[clamp(2.5rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.04em] [text-shadow:0_8px_40px_rgba(0,0,0,0.6)]">
           O mundo está ouvindo aqui.
         </h2>
         <p className="sp-sub mt-6 text-lg font-medium text-white/85 sm:text-xl">Junte-se à festa com o Premium.</p>
