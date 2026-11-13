@@ -101,3 +101,23 @@ sombra/espessura, brilhos e detalhes. Cada um ganhou uma animação interna pró
   headless, sem hover real com mouse e sem toque em aparelho físico.
 - Não houve medida de fps com GPU real (o headless usa SwiftShader e não limita por vsync).
 - Arraste do carrossel e da pilha: não houve regressão de código nesses componentes, mas eles não foram regravados.
+
+## Continuação (13/11/2026, sessão manual)
+
+### Símbolo da hero voltou ao SVG com luz
+- A imagem assada em Three.js ficou lavada (verde chapado). Voltou o símbolo SVG com sombreado difuso,
+  brilho especular e grão; o pipeline `three` / `renderSymbol` / `bake-symbol` / `symbol-3d.webp` foi removido.
+- **Causa real do símbolo "apagado"**: no modo estrito do React (dev), o primeiro contexto do GSAP era desfeito,
+  mas a promessa `document.fonts.load` dele ainda disparava a entrada. A segunda entrada usava `from()` e
+  "terminava" no valor parcial deixado pela primeira, então o símbolo ficava parado em ~30% de opacidade e 90% de
+  escala (os termos, em ~3%). Corrigido com uma trava `cancelled` na limpeza e `fromTo()` com valores finais
+  explícitos. Medido: opacidade 1 e escala 1 após ~1,5 s.
+
+### Rodada 6: objetos embutidos no bloco tipográfico
+- Comparando a gravação da referência (bloco "All in", com objetos e o QR no meio das linhas) com a nossa
+  (`.motion/ours-r6`): o nosso bloco "100 milhões de músicas sem anúncio" era só texto.
+- Agora o disco, a nota e o equalizador ficam **dentro das linhas**, na altura da caixa-alta, com o loop próprio de
+  cada um, e saltam para dentro da linha (escala + giro, `back.out`) logo depois das letras vizinhas, no scrub.
+- As letras são separadas por palavra e por letra (`words,chars`), então a quebra no celular não corta mais palavras
+  ("SEM ANÚ / NCIO"). Os objetos soltos que encostavam no título no celular ficam só a partir de `md`.
+- Testado: sem overflow em 375 e 1440; build e tipos ok.
