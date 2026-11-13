@@ -10,6 +10,29 @@ export const getLenis = () => instance
  * ScrollTrigger e o scroll suave usem exatamente o mesmo frame.
  */
 export function useLenis() {
+  // Fontes e imagens mudam a altura das seções depois do primeiro layout: remede os gatilhos
+  useEffect(() => {
+    let raf = 0
+    const refresh = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => ScrollTrigger.refresh())
+    }
+    document.fonts.ready.then(refresh)
+    window.addEventListener('load', refresh)
+    let lastH = document.body.offsetHeight
+    const ro = new ResizeObserver(() => {
+      const h = document.body.offsetHeight
+      if (Math.abs(h - lastH) > 4) refresh()
+      lastH = h
+    })
+    ro.observe(document.body)
+    return () => {
+      window.removeEventListener('load', refresh)
+      ro.disconnect()
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
   useEffect(() => {
     if (prefersReducedMotion()) return
     const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, anchors: { offset: -80 } })

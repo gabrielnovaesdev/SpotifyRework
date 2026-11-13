@@ -1,0 +1,10 @@
+[
+  { "wait": 3500 },
+  { "mark": "frame" },
+  { "click": ".h-cta" },
+  { "wait": 2200 },
+  { "eval": "document.title = location.hash + ' ' + Math.round(scrollY) + ' ' + document.activeElement.id" },
+  { "mark": "back" },
+  { "eval": "history.back()" },
+  { "wait": 1200 }
+]

@@ -1,0 +1,20 @@
+[
+  { "wait": 3000 },
+  { "eval": "document.getElementById('beneficios').scrollIntoView()" },
+  { "wait": 1200 },
+  { "mark": "swipe-carousel" },
+  { "eval": "window.__a = document.querySelector('#beneficios [aria-current]').getAttribute('aria-label')" },
+  { "swipe": "#beneficios [role=region]", "dx": -220, "dy": 0 },
+  { "wait": 900 },
+  { "eval": "document.title = 'C:' + window.__a + ' -> ' + document.querySelector('#beneficios [aria-current]').getAttribute('aria-label')" },
+  { "eval": "document.getElementById('momentos').scrollIntoView()" },
+  { "wait": 1200 },
+  { "mark": "swipe-rail" },
+  { "swipe": "#momentos [role=region]", "dx": -240, "dy": 0 },
+  { "wait": 1200 },
+  { "mark": "vertical-on-rail" },
+  { "eval": "window.__y = scrollY" },
+  { "swipe": "#momentos [role=region]", "dx": 0, "dy": -300 },
+  { "wait": 900 },
+  { "eval": "document.title += ' | rail:' + document.querySelector('#momentos [aria-live]').textContent + ' | vscroll:' + Math.round(scrollY - window.__y)" }
+]

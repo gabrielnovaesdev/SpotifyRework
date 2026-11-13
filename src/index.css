@@ -120,3 +120,102 @@
   .tape,
   [class*='transition'] { transition: none !important; }
 }
+
+/* ---------------------------------------------------------------- Movimento (referência: docs/motion-map.md) */
+
+/* Faixas contínuas: duas metades iguais, a trilha anda -50% e fecha sem salto */
+@keyframes marquee {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+.marquee {
+  animation: marquee var(--marquee-dur, 38s) linear infinite;
+  animation-direction: var(--marquee-dir, normal);
+}
+.is-offscreen .marquee { animation-play-state: paused; }
+
+/* Header que recolhe */
+.nav-tag {
+  @apply inline-flex h-11 items-center bg-paper px-4 text-ink;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 1.125rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 3px rgb(0 0 0 / 0.25);
+  transition: transform 0.18s var(--ease-paste), background-color 0.18s;
+}
+.nav-tag:hover { transform: translateY(-2px); background: var(--color-yellow); }
+.nav-tag:active { transform: translateY(1px); }
+
+.nav-links > li {
+  transition: opacity 0.26s var(--ease-paste), transform 0.32s var(--ease-paste), visibility 0s;
+  /* ao recolher: a da esquerda vai primeiro, em direção ao "+" */
+  transition-delay: calc(var(--i) * 30ms);
+}
+.nav[data-shown='false'] .nav-links > li {
+  opacity: 0;
+  transform: translate3d(calc((var(--n) - var(--i)) * 14px), 0, 0) scale(0.9);
+  visibility: hidden;
+  transition-delay: calc(var(--i) * 30ms), calc(var(--i) * 30ms), calc(0.32s + var(--i) * 30ms);
+}
+.nav[data-shown='true'] .nav-links > li {
+  /* ao voltar: cascata a partir do "+" */
+  transition-delay: calc((var(--n) - 1 - var(--i)) * 40ms);
+}
+
+.nav-toggle {
+  @apply relative grid h-11 w-11 shrink-0 place-items-center bg-paper text-ink;
+  box-shadow: 0 2px 3px rgb(0 0 0 / 0.25);
+  transition: transform 0.18s var(--ease-paste), background-color 0.18s;
+}
+.nav-toggle:hover { background: var(--color-yellow); transform: translateY(-2px); }
+.nav-toggle__h, .nav-toggle__v {
+  position: absolute; width: 18px; height: 3px; background: currentColor;
+  transition: transform 0.22s var(--ease-paste);
+}
+.nav-toggle__v { transform: rotate(90deg); }
+.nav[data-shown='true'] .nav-toggle__v { transform: rotate(0deg); } /* "+" vira "−" */
+
+.nav-mobile {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ease-paste);
+}
+.nav-mobile > ul { min-height: 0; overflow: hidden; }
+.nav[data-shown='true'] .nav-mobile { grid-template-rows: 1fr; }
+.nav-mobile li { opacity: 0; transform: translateY(-6px); transition: opacity 0.25s, transform 0.3s var(--ease-paste); }
+.nav[data-shown='true'] .nav-mobile li { opacity: 1; transform: none; transition-delay: calc(var(--i) * 40ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+}
+
+/* Indicador deslizante das abas de plano */
+.strip-ind {
+  transition: transform 0.42s var(--ease-paste), width 0.42s var(--ease-paste), height 0.42s var(--ease-paste);
+}
+
+/* Transição de enquadramento */
+html.fj-on { background: var(--color-ink); }
+html.fj-on body { background: var(--color-ink); }
+html.fj-on #stage { overflow: clip; box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.7); }
+.fj-side {
+  position: fixed;
+  top: 14vh;
+  height: 72vh;
+  width: 20vw;
+  z-index: 40;
+  pointer-events: none;
+}
+.fj-left { left: 0; background: var(--color-pink); transform-origin: right center; }
+.fj-right { right: 0; background: var(--color-green); transform-origin: left center; }
+body { perspective: 1200px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links > li, .nav-mobile, .nav-mobile li, .nav-tag, .nav-toggle, .nav-toggle__h, .nav-toggle__v, .strip-ind {
+    transition: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-mobile { display: none; }
+}
