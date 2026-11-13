@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { gsap, ScrollTrigger, useGSAP, img } from '../lib'
+import { gsap, ScrollTrigger, useGSAP, img, prefersReducedMotion } from '../lib'
 
 type Tile = { title: string; from?: string; to?: string; src?: string }
 
@@ -57,6 +57,7 @@ export default function Marquee() {
 
   useGSAP(
     () => {
+      if (prefersReducedMotion()) return
       const rows = gsap.utils.toArray<HTMLElement>('.marquee-row')
       const tweens = rows.map((row) => {
         const rev = row.classList.contains('marquee-reverse')

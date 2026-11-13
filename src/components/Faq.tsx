@@ -16,7 +16,7 @@ export default function Faq() {
   return (
     <section id="faq" className="container-x grid gap-12 py-20 sm:py-28 lg:grid-cols-[1fr_1.6fr]">
       <div>
-        <RevealHeading className="text-[clamp(2.25rem,5vw,4rem)] font-black leading-[0.95] tracking-[-0.045em]">
+        <RevealHeading className="text-[clamp(2.25rem,5vw,4rem)] font-black leading-[0.95] tracking-[-0.04em]">
           Alguma dúvida?
         </RevealHeading>
         <p className="mt-5 max-w-sm text-lg text-subdued">Confira as perguntas mais frequentes sobre o Premium.</p>
@@ -30,6 +30,7 @@ export default function Faq() {
                 type="button"
                 onClick={() => setOpen(isOpen ? null : i)}
                 aria-expanded={isOpen}
+                aria-controls={`faq-${i}`}
                 className="group flex w-full items-center justify-between gap-6 py-6 text-left text-lg font-bold sm:text-xl"
               >
                 <span className="transition-colors group-hover:text-green">{f.q}</span>
@@ -42,6 +43,8 @@ export default function Faq() {
                 </span>
               </button>
               <div
+                id={`faq-${i}`}
+                inert={!isOpen}
                 onTransitionEnd={() => ScrollTrigger.refresh()}
                 className={`grid transition-[grid-template-rows,opacity] duration-500 ease-(--ease-spring) ${
                   isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'

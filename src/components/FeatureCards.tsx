@@ -126,7 +126,7 @@ function MatchGraphic() {
         <img src={img('img4.jpg')} alt="" loading="lazy" className="mt-right -ml-8 h-[clamp(6rem,12vw,10rem)] w-[clamp(6rem,12vw,10rem)] rounded-full object-cover ring-4 ring-[#088569]" />
       </div>
       <div className="absolute inset-x-0 bottom-[12%] text-center text-white">
-        <p className="text-[clamp(3rem,6vw,5rem)] font-black leading-none tracking-[-0.05em]">
+        <p className="text-[clamp(3rem,6vw,5rem)] font-black leading-none tracking-[-0.04em]">
           <span className="mt-count">92</span>%
         </p>
         <p className="mt-2 text-sm font-bold uppercase tracking-widest text-white/70">de gosto em comum</p>
@@ -238,30 +238,6 @@ function CardGroup({ group }: { group: Group }) {
             scrollTrigger: { trigger: next, start: 'top 70%', end: 'top 15%', scrub: true },
           })
         })
-
-        // Tilt 3D com o mouse
-        const onMove = (e: PointerEvent) => {
-          if (e.pointerType !== 'mouse') return
-          const el = (e.currentTarget as HTMLElement).querySelector('.fc-graphic') as HTMLElement
-          const r = el.getBoundingClientRect()
-          gsap.to(el, {
-            rotateY: ((e.clientX - r.left) / r.width - 0.5) * 10,
-            rotateX: -((e.clientY - r.top) / r.height - 0.5) * 10,
-            duration: 0.6,
-            ease: 'power3.out',
-          })
-        }
-        const onLeave = (e: PointerEvent) =>
-          gsap.to((e.currentTarget as HTMLElement).querySelector('.fc-graphic'), { rotateX: 0, rotateY: 0, duration: 1, ease: 'elastic.out(1,0.5)' })
-        inners.forEach((c) => {
-          c.addEventListener('pointermove', onMove)
-          c.addEventListener('pointerleave', onLeave)
-        })
-        return () =>
-          inners.forEach((c) => {
-            c.removeEventListener('pointermove', onMove)
-            c.removeEventListener('pointerleave', onLeave)
-          })
       })
     },
     { scope: root },
@@ -270,7 +246,7 @@ function CardGroup({ group }: { group: Group }) {
   return (
     <section ref={root} id={group.id} className="container-x relative py-20 sm:py-28">
       <header className="mx-auto max-w-[1105px] text-center">
-        <RevealHeading className="text-[clamp(2.25rem,5vw,4rem)] font-black leading-[1.02] tracking-[-0.045em]">
+        <RevealHeading className="text-[clamp(2.25rem,5vw,4rem)] font-black leading-[1.02] tracking-[-0.04em]">
           {group.title}
         </RevealHeading>
         <p className="mx-auto mt-4 max-w-2xl text-lg font-semibold text-white/75 sm:text-xl">{group.subtitle}</p>
@@ -294,7 +270,7 @@ function CardGroup({ group }: { group: Group }) {
                 style={{ backgroundColor: c.color }}
               >
                 {/* Painel "vaza" pela borda de baixo do card, como na referência */}
-                <div className="fc-graphic relative h-[340px] px-5 pt-5 [transform-style:preserve-3d] sm:h-[400px] md:h-full md:px-10 md:pt-8">
+                <div className="fc-graphic relative h-[340px] px-5 pt-5 sm:h-[400px] md:h-full md:px-10 md:pt-8">
                   <div className="h-full md:h-[calc(100%+28px)]">{c.graphic}</div>
                 </div>
                 <div className="flex items-center p-7 pt-2 md:p-12">
@@ -305,9 +281,6 @@ function CardGroup({ group }: { group: Group }) {
                       </span>
                     )}
                     <h3 className="mt-2 text-[clamp(1.75rem,3vw,2.6rem)] font-extrabold leading-[1.08] tracking-[-0.03em]">{c.title}</h3>
-                    <span className="mt-6 block font-mono text-sm text-white/60">
-                      {String(i + 1).padStart(2, '0')} / {String(group.cards.length).padStart(2, '0')}
-                    </span>
                   </div>
                 </div>
               </article>

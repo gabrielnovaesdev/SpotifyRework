@@ -1,5 +1,3 @@
-import { useRef, type PointerEvent } from 'react'
-import { gsap, useGSAP } from '../lib'
 import { RevealHeading } from './Reveal'
 import { IconCheck, Logo } from './Icons'
 
@@ -19,8 +17,8 @@ const plans: Plan[] = [
   {
     name: 'Individual',
     badge: 'R$ 0 por 1 mês',
-    price: 'R$ 0 por 1 mês',
-    after: 'R$ 21,90/mês depois',
+    price: 'R$ 21,90/mês',
+    after: 'para 1 pessoa',
     accounts: '1 conta Premium',
     accent: '#ffd2d7',
     features: ['1 conta Premium', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
@@ -62,53 +60,12 @@ const plans: Plan[] = [
   },
 ]
 
-function tilt(e: PointerEvent<HTMLElement>) {
-  if (e.pointerType !== 'mouse') return
-  const el = e.currentTarget
-  const r = el.getBoundingClientRect()
-  const x = (e.clientX - r.left) / r.width - 0.5
-  const y = (e.clientY - r.top) / r.height - 0.5
-  gsap.to(el, { rotateY: x * 8, rotateX: -y * 8, duration: 0.6, ease: 'power3.out', transformPerspective: 900 })
-}
-function untilt(e: PointerEvent<HTMLElement>) {
-  gsap.to(e.currentTarget, { rotateY: 0, rotateX: 0, duration: 0.9, ease: 'elastic.out(1, 0.5)' })
-}
-
 export default function Plans() {
-  const root = useRef<HTMLElement>(null)
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia()
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from('.plan', {
-          y: 120,
-          autoAlpha: 0,
-          rotateX: -12,
-          transformPerspective: 900,
-          duration: 1.2,
-          ease: 'expo.out',
-          stagger: 0.1,
-          scrollTrigger: { trigger: '.plans-grid', start: 'top 80%' },
-        })
-        gsap.from('.pay-chip', {
-          scale: 0.6,
-          autoAlpha: 0,
-          duration: 0.6,
-          ease: 'back.out(2)',
-          stagger: 0.05,
-          scrollTrigger: { trigger: '.pay-row', start: 'top 90%' },
-        })
-      })
-    },
-    { scope: root },
-  )
-
   return (
-    <section ref={root} id="planos" className="relative py-20 sm:py-28">
+    <section id="planos" className="relative py-20 sm:py-28">
       <div className="container-x">
         <div className="mx-auto max-w-3xl text-center">
-          <RevealHeading className="text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-[-0.045em]">
+          <RevealHeading className="text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-[-0.04em]">
             Planos acessíveis para qualquer situação
           </RevealHeading>
           <p className="mx-auto mt-6 max-w-xl text-lg text-subdued">
@@ -124,13 +81,11 @@ export default function Plans() {
           </ul>
         </div>
 
-        <div className="plans-grid mt-16 grid gap-5 [perspective:1200px] md:grid-cols-2 xl:grid-cols-4">
+        <div className="plans-grid mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {plans.map((p) => (
             <article
               key={p.name}
-              onPointerMove={tilt}
-              onPointerLeave={untilt}
-              className="plan group relative flex flex-col overflow-hidden rounded-2xl bg-elevated p-7 ring-1 ring-white/5 will-change-transform [transform-style:preserve-3d]"
+              className="plan group relative flex flex-col overflow-hidden rounded-2xl bg-elevated p-7 ring-1 ring-white/5 transition-[transform,box-shadow] duration-300 ease-(--ease-spring) hover:-translate-y-0.5 hover:shadow-[0_24px_60px_-30px_rgba(0,0,0,0.9)]"
             >
               <div
                 className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-25 blur-2xl transition-opacity duration-500 group-hover:opacity-50"
@@ -171,7 +126,7 @@ export default function Plans() {
             </article>
           ))}
         </div>
-        <p className="mt-10 text-center text-xs text-white/40">
+        <p className="mt-10 text-center text-xs text-white/60">
           Valores de referência para fins de estudo. Este é um projeto educacional sem vínculo com o Spotify.
         </p>
       </div>

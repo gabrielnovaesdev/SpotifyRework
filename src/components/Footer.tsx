@@ -25,10 +25,10 @@ export default function Footer() {
           {cols.map((c) => (
             <div key={c.title}>
               <h4 className="text-[13px] font-bold uppercase tracking-[0.12em] text-subdued">{c.title}</h4>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-2">
                 {c.links.map((l) => (
                   <li key={l}>
-                    <a href="#" className="text-[15px] text-white/90 transition-colors hover:text-green hover:underline">
+                    <a href="#" className="inline-flex min-h-11 items-center text-[15px] text-white/90 transition-colors hover:text-green hover:underline">
                       {l}
                     </a>
                   </li>
@@ -55,7 +55,7 @@ export default function Footer() {
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             {['Legal', 'Centro de Privacidade', 'Política de Privacidade', 'Cookies', 'Acessibilidade'].map((l) => (
               <li key={l}>
-                <a href="#" className="transition-colors hover:text-white">{l}</a>
+                <a href="#" className="inline-flex min-h-11 items-center transition-colors hover:text-white">{l}</a>
               </li>
             ))}
           </ul>

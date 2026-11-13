@@ -81,7 +81,7 @@ export default function Moments() {
     <section ref={root} id="momentos" aria-label="Moldando os grandes momentos da música" className="relative bg-[#4100f4]">
       <div className="mo-pin flex min-h-svh flex-col justify-center overflow-hidden py-20 md:pb-8 md:pt-24">
         <header className="container-x">
-          <RevealHeading className="max-w-4xl text-[clamp(2.5rem,5.6vw,5rem)] font-black leading-[1] tracking-[-0.045em]">
+          <RevealHeading className="max-w-4xl text-[clamp(2.5rem,5.6vw,5rem)] font-black leading-[1] tracking-[-0.04em]">
             Moldando os grandes momentos da música
           </RevealHeading>
           <p className="mt-6 max-w-3xl text-lg font-medium text-white/90 sm:text-xl">
