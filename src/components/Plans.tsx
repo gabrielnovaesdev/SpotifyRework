@@ -1,135 +1,128 @@
-import { RevealHeading } from './Reveal'
-import { IconCheck, Logo } from './Icons'
+import { useRef, useState, type KeyboardEvent } from 'react'
+import { tilt } from '../lib'
+import { IconArrow, IconCheck } from './Icons'
 
-type Plan = {
-  name: string
-  badge: string
-  price: string
-  after: string
-  accounts: string
-  accent: string
-  features: string[]
-  cta: string
-  terms: string
-}
+type Plan = { id: string; name: string; price: string; who: string; bg: string; ink: string; features: string[]; terms: string }
 
 const plans: Plan[] = [
   {
-    name: 'Individual',
-    badge: 'R$ 0 por 1 mês',
-    price: 'R$ 21,90/mês',
-    after: 'para 1 pessoa',
-    accounts: '1 conta Premium',
-    accent: '#ffd2d7',
+    id: 'individual', name: 'Individual', price: '21,90', who: '1 conta', bg: 'bg-yellow', ink: 'text-ink',
     features: ['1 conta Premium', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
-    cta: 'Experimente 1 mês por R$ 0',
-    terms: 'R$ 0 por 1 mês, depois R$ 21,90 por mês. Oferta disponível apenas para quem nunca assinou o Premium.',
+    terms: 'R$ 0 por 1 mês, depois R$ 21,90 por mês. Só para quem nunca teve Premium.',
   },
   {
-    name: 'Duo',
-    badge: 'R$ 0 por 1 mês',
-    price: 'R$ 27,90/mês',
-    after: 'para 2 pessoas',
-    accounts: '2 contas Premium',
-    accent: '#cfb5f7',
+    id: 'duo', name: 'Duo', price: '27,90', who: '2 contas', bg: 'bg-pink', ink: 'text-ink',
     features: ['2 contas Premium', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
-    cta: 'Experimente 1 mês por R$ 0',
-    terms: 'Para casais que moram no mesmo endereço. Sujeito a termos.',
+    terms: 'Para duas pessoas que moram no mesmo endereço. Sujeito a termos.',
   },
   {
-    name: 'Família',
-    badge: 'R$ 0 por 1 mês',
-    price: 'R$ 34,90/mês',
-    after: 'até 6 contas',
-    accounts: 'Até 6 contas Premium',
-    accent: '#a5c8f2',
-    features: ['Até 6 contas Premium', 'Controle de conteúdo explícito', 'Cancele quando quiser', 'Assine ou faça um pagamento único'],
-    cta: 'Experimente 1 mês por R$ 0',
-    terms: 'Para até 6 membros da família que moram no mesmo endereço. Sujeito a termos.',
+    id: 'familia', name: 'Família', price: '34,90', who: 'até 6 contas', bg: 'bg-green', ink: 'text-ink',
+    features: ['Até 6 contas Premium', 'Controle de conteúdo explícito', 'Cancele quando quiser'],
+    terms: 'Para até 6 pessoas que moram no mesmo endereço. Sujeito a termos.',
   },
   {
-    name: 'Universitário',
-    badge: 'R$ 0 por 1 mês',
-    price: 'R$ 11,90/mês',
-    after: 'com desconto',
-    accounts: '1 conta Premium verificada',
-    accent: '#ffc864',
-    features: ['1 conta Premium verificada', 'Desconto para estudantes qualificados', 'Cancele quando quiser'],
-    cta: 'Experimente 1 mês por R$ 0',
-    terms: 'Disponível apenas para estudantes de instituições de ensino superior credenciadas.',
+    id: 'universitario', name: 'Universitário', price: '11,90', who: '1 conta verificada', bg: 'bg-paper', ink: 'text-ink',
+    features: ['1 conta Premium verificada', 'Desconto para estudantes', 'Cancele quando quiser'],
+    terms: 'Para estudantes de ensino superior credenciado, com verificação anual.',
   },
 ]
 
+/**
+ * Cartaz de planos com tirinhas destacáveis: cada tirinha é um plano.
+ * Destacar uma tirinha troca o cartaz inteiro e o preço vira como uma placa.
+ */
 export default function Plans() {
+  const [sel, setSel] = useState(0)
+  const strips = useRef<(HTMLButtonElement | null)[]>([])
+  const p = plans[sel]
+
+  const onKey = (e: KeyboardEvent<HTMLButtonElement>) => {
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+    if (!step) return
+    e.preventDefault()
+    const next = (sel + step + plans.length) % plans.length
+    setSel(next)
+    strips.current[next]?.focus()
+  }
+
   return (
-    <section id="planos" className="relative py-20 sm:py-28">
-      <div className="container-x">
-        <div className="mx-auto max-w-3xl text-center">
-          <RevealHeading className="text-[clamp(2.25rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-[-0.04em]">
-            Planos acessíveis para qualquer situação
-          </RevealHeading>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-subdued">
-            Escolha um plano Premium e ouça sem anúncios quanto quiser, em qualquer dispositivo. Várias formas de pagamento.
-            Cancele quando quiser.
+    <section id="planos" aria-labelledby="planos-titulo" className="wall-x py-16 lg:py-24">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-12">
+        <div className="poster bg-ink p-6 text-paper sm:p-10 lg:col-span-4 lg:self-start">
+          <h2 id="planos-titulo" className="wood text-[clamp(3.25rem,5.6vw,5.5rem)]">
+            Destaque o seu plano
+          </h2>
+          <p className="mt-5 text-lg font-semibold leading-snug">
+            Escolha uma tirinha. Todo plano começa com 1 mês por R$ 0 e pode ser cancelado quando quiser.
           </p>
-          <ul className="pay-row mt-8 flex flex-wrap justify-center gap-2" aria-label="Formas de pagamento">
-            {['Pix', 'Visa', 'Mastercard', 'Elo', 'Amex', 'PayPal', 'Boleto'].map((p) => (
-              <li key={p} className="pay-chip rounded-md bg-white px-3 py-1 text-xs font-extrabold text-black">
-                {p}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-6 text-sm text-paper/80">Pix, cartão, PayPal ou boleto.</p>
         </div>
 
-        <div className="plans-grid mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {plans.map((p) => (
-            <article
-              key={p.name}
-              className="plan group relative flex flex-col overflow-hidden rounded-2xl bg-elevated p-7 ring-1 ring-white/5 transition-[transform,box-shadow] duration-300 ease-(--ease-spring) hover:-translate-y-0.5 hover:shadow-[0_24px_60px_-30px_rgba(0,0,0,0.9)]"
-            >
-              <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-25 blur-2xl transition-opacity duration-500 group-hover:opacity-50"
-                style={{ background: `radial-gradient(60% 100% at 50% 0%, ${p.accent}, transparent)` }}
-              />
-              <span
-                className="relative w-fit rounded-br-lg rounded-tl-md px-3 py-1 text-sm font-bold text-black -mx-7 -mt-7 mb-6"
-                style={{ background: p.accent }}
-              >
-                {p.badge}
-              </span>
-              <div className="relative flex items-center gap-2 text-white">
-                <Logo className="h-6" />
-                <span className="font-bold">Premium</span>
-              </div>
-              <h3 className="relative mt-2 text-4xl font-black tracking-tight" style={{ color: p.accent }}>
+        <article
+          className={`poster ${p.bg} ${p.ink} relative z-10 flex flex-col transition-colors duration-500 lg:col-span-8 lg:-ml-8 lg:mt-16 lg:rotate-[0.6deg]`}
+        >
+          <div className="grid flex-1 gap-8 p-6 sm:p-10 md:grid-cols-[1.3fr_1fr]">
+            <div>
+              <h3 key={p.id} className="wood animate-flip text-[clamp(4rem,9vw,8.5rem)]">
                 {p.name}
               </h3>
-              <p className="relative mt-3 text-lg font-bold">{p.price}</p>
-              <p className="relative text-sm text-subdued">{p.after}</p>
-              <hr className="relative my-6 border-white/10" />
-              <ul className="relative flex-1 space-y-3">
+              <p className="mt-4 flex items-baseline gap-2">
+                <span className="text-2xl font-extrabold">R$</span>
+                <span key={`price-${p.id}`} className="wood animate-flip text-[clamp(4rem,8vw,7rem)]">
+                  {p.price}
+                </span>
+                <span className="text-xl font-bold">/mês, {p.who}</span>
+              </p>
+            </div>
+            <div className="flex flex-col justify-between gap-6">
+              <ul className="space-y-3">
                 {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-[15px] text-white/90">
-                    <IconCheck className="mt-0.5 h-5 w-5 shrink-0" />
+                  <li key={f} className="flex items-start gap-3 text-lg font-semibold">
+                    <IconCheck className="mt-1 h-5 w-5 shrink-0" />
                     {f}
                   </li>
                 ))}
               </ul>
-              <a
-                href="#cta"
-                className="btn relative mt-8 w-full whitespace-nowrap px-4 text-[15px] text-black hover:scale-[1.03] hover:brightness-110"
-                style={{ background: p.accent }}
-              >
-                {p.cta}
-              </a>
-              <p className="relative mt-5 min-h-[3.75rem] text-center text-xs leading-relaxed text-white/50">{p.terms}</p>
-            </article>
-          ))}
-        </div>
-        <p className="mt-10 text-center text-xs text-white/60">
-          Valores de referência para fins de estudo. Este é um projeto educacional sem vínculo com o Spotify.
-        </p>
+              <div>
+                <a href="https://www.spotify.com/br-pt/premium/" target="_blank" rel="noopener noreferrer" className="tape whitespace-nowrap bg-ink px-5 text-base text-paper" style={tilt(-1.5)}>
+                  Começar 1 mês por R$ 0 <IconArrow className="h-5 w-5" />
+                </a>
+                <p className="mt-4 text-sm leading-snug">{p.terms}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tirinhas destacáveis */}
+          <div role="radiogroup" aria-label="Planos" className="grid grid-cols-2 border-t-2 border-dashed border-ink/50 sm:grid-cols-4">
+            {plans.map((q, i) => {
+              const on = i === sel
+              return (
+                <button
+                  key={q.id}
+                  ref={(el) => {
+                    strips.current[i] = el
+                  }}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  tabIndex={on ? 0 : -1}
+                  onClick={() => setSel(i)}
+                  onKeyDown={onKey}
+                  className={`group relative flex min-h-28 flex-col items-center justify-center gap-1 border-ink/50 px-2 py-4 text-center transition-[transform,background-color] duration-300 ease-(--ease-paste) border-dashed odd:border-r-2 nth-[n+3]:border-t-2 sm:min-h-32 sm:nth-[n+3]:border-t-0 sm:not-last:border-r-2 ${
+                    on ? 'translate-y-3 bg-ink text-paper' : 'hover:-translate-y-0.5 hover:bg-ink/10'
+                  }`}
+                >
+                  <span className="wood text-2xl sm:text-3xl">{q.name}</span>
+                  <span className="text-sm font-bold">R$ {q.price}</span>
+                </button>
+              )
+            })}
+          </div>
+        </article>
       </div>
+      <p className="mt-6 text-center text-sm font-semibold">
+        Valores de referência para fins de estudo. Projeto educacional sem vínculo com a Spotify AB.
+      </p>
     </section>
   )
 }
