@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src=".github/assets/banner.svg" alt="Spotify Premium, releitura: landing page em React e GSAP" width="100%">
+<img src=".github/assets/banner.svg" alt="Spotify Premium Rework: landing page em React e GSAP" width="100%">
 
 <br>
 
@@ -8,11 +8,11 @@
 
 <br>
 
-<img src="https://img.shields.io/badge/React-19-111111?style=for-the-badge&logo=react&logoColor=61DAFB&labelColor=ffe600" alt="React 19">
-<img src="https://img.shields.io/badge/TypeScript-5-111111?style=for-the-badge&logo=typescript&logoColor=3178C6&labelColor=ffe600" alt="TypeScript 5">
-<img src="https://img.shields.io/badge/Tailwind-4-111111?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4&labelColor=ffe600" alt="Tailwind CSS 4">
-<img src="https://img.shields.io/badge/GSAP-3-111111?style=for-the-badge&logo=greensock&logoColor=0AE448&labelColor=ffe600" alt="GSAP 3">
-<img src="https://img.shields.io/badge/Vite-7-111111?style=for-the-badge&logo=vite&logoColor=646CFF&labelColor=ffe600" alt="Vite 7">
+<img src="https://img.shields.io/badge/React-19-161618?style=for-the-badge&logo=react&logoColor=61DAFB&labelColor=161618" alt="React 19">
+<img src="https://img.shields.io/badge/TypeScript-5-161618?style=for-the-badge&logo=typescript&logoColor=3178C6&labelColor=161618" alt="TypeScript 5">
+<img src="https://img.shields.io/badge/Tailwind-4-161618?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4&labelColor=161618" alt="Tailwind CSS 4">
+<img src="https://img.shields.io/badge/GSAP-3-161618?style=for-the-badge&logo=greensock&logoColor=0AE448&labelColor=161618" alt="GSAP 3">
+<img src="https://img.shields.io/badge/Vite-7-161618?style=for-the-badge&logo=vite&logoColor=646CFF&labelColor=161618" alt="Vite 7">
 
 <br>
 
