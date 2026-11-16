@@ -1,6 +1,10 @@
 <div align="center">
 
-<img src=".github/assets/banner.svg" alt="Spotify Premium, releitura: landing page em React e GSAP, versão 1.2" width="100%">
+<img src=".github/assets/banner.svg" alt="Spotify Premium, releitura: landing page em React e GSAP" width="100%">
+
+<br>
+
+<a href="https://spotifyrework.vercel.app/"><img src="https://img.shields.io/badge/VER_AO_VIVO-spotifyrework.vercel.app-1ed760?style=for-the-badge&logo=vercel&logoColor=black&labelColor=111111" alt="Ver o site ao vivo"></a>
 
 <br>
 
@@ -14,7 +18,7 @@
 
 <sub>
 
-**[Sobre](#-sobre)** &nbsp;·&nbsp; **[Destaques](#-destaques)** &nbsp;·&nbsp; **[Tecnologias](#-tecnologias)** &nbsp;·&nbsp; **[Rodando](#-rodando-localmente)** &nbsp;·&nbsp; **[Estrutura](#-estrutura)** &nbsp;·&nbsp; **[Versões](#-versões)**
+**[Sobre](#-sobre)** &nbsp;·&nbsp; **[Destaques](#-destaques)** &nbsp;·&nbsp; **[Tecnologias](#-tecnologias)** &nbsp;·&nbsp; **[Rodando](#-rodando-localmente)** &nbsp;·&nbsp; **[Estrutura](#-estrutura)** &nbsp;·&nbsp; **[Versões](#-versões)** &nbsp;·&nbsp; **[Observações](#-observações)**
 
 </sub>
 
@@ -22,19 +26,28 @@
 
 <br>
 
+<div align="center">
+  <a href="https://spotifyrework.vercel.app/">
+    <img src=".github/assets/preview.webp" alt="Tela inicial do projeto: a palavra PREMIUM sobre o símbolo do Spotify em verde, cercada por objetos ilustrados de música" width="92%">
+  </a>
+</div>
+
+<br>
+
 ## ◆ Sobre
 
-Releitura da landing page do **Spotify Premium (Brasil)**, feita como projeto de portfólio para mostrar front-end e movimento. Na versão **1.2**, a página vira um **muro de lambe-lambe**: cada oferta, recurso e plano é um cartaz colado sobre o anterior, com fita, cores fortes (rosa, amarelo e verde) e tipografia de cartaz (Anton e Archivo).
+Releitura da landing page do **Spotify Premium (Brasil)**, feita como projeto de portfólio para exercitar front-end e movimento. A página vira um **muro de lambe-lambe**: cada oferta, recurso e plano é um cartaz colado sobre o anterior, com fita, cores fortes (rosa, amarelo e verde) e tipografia de cartaz.
 
-As decisões de design estão registradas em [`DESIGN.md`](DESIGN.md) e [`PRODUCT.md`](PRODUCT.md); o mapa do sistema de movimento está em [`docs/motion-map.md`](docs/motion-map.md).
+**Acesse:** [spotifyrework.vercel.app](https://spotifyrework.vercel.app/)
+
+As decisões de design estão registradas em [`DESIGN.md`](DESIGN.md) e [`PRODUCT.md`](PRODUCT.md), e o mapa do sistema de movimento está em [`docs/motion-map.md`](docs/motion-map.md).
 
 ## ◆ Destaques
 
-- **Hero com o símbolo do Spotify em luz** e objetos animados que entram junto com o título
-- **Letras-rolo** e blocos tipográficos que reagem à rolagem
+- **Hero com o símbolo do Spotify em volume** e objetos ilustrados (fone, vinil, fita, microfone) que entram junto com o título
 - **Sistema de movimento** com GSAP (ScrollTrigger e SplitText) e rolagem suave com Lenis
-- **Carrossel de benefícios e faixas** que respondem ao scroll
-- **Planos, FAQ e chamadas finais** no mesmo estilo de cartaz
+- **Seções em cartaz:** benefícios, "é fácil", planos, momentos, dúvidas frequentes e chamadas finais, todas no mesmo estilo
+- **Planos** Individual, Duo, Família e Universitário, cada um com seu objeto e sua cor
 - **Acessível:** contraste revisado nos destaques e suporte a `prefers-reduced-motion`
 - **Responsivo**, com animações que pausam fora da tela
 
@@ -47,6 +60,7 @@ As decisões de design estão registradas em [`DESIGN.md`](DESIGN.md) e [`PRODUC
 | Tailwind CSS 4 | Estilização e tokens de design |
 | GSAP 3 | Animações e animações de scroll |
 | Lenis | Rolagem suave |
+| Archivo e Figtree | Tipografia (variáveis, via Fontsource) |
 
 ## ◆ Rodando localmente
 
@@ -57,7 +71,7 @@ git clone https://github.com/gabrielnovaesdev/SpotifyRework.git
 cd SpotifyRework
 npm install
 npm run dev       # http://localhost:5173
-npm run build     # gera a versão de produção em dist/
+npm run build     # confere os tipos e gera dist/
 npm run preview   # serve dist/ para conferência
 ```
 
@@ -65,7 +79,7 @@ npm run preview   # serve dist/ para conferência
 
 ```text
 ├── index.html
-├── public/                 Imagens, ícones e mídia
+├── public/                 Imagens, ícones e vídeo do mascote
 ├── docs/                   Mapa de movimento e notas de revisão
 ├── tools/motion-recorder/  Grava o movimento da página para análise
 └── src/
@@ -73,7 +87,7 @@ npm run preview   # serve dist/ para conferência
     ├── components/         Hero, Nav, Plans, Faq, Footer e demais seções
     ├── hooks/              Lenis, pausa fora da tela, salto de quadros
     ├── motion.ts           Sistema de movimento
-    └── media.ts            Mídia usada pelas seções
+    └── media.ts            Mídia externa usada pelas seções
 ```
 
 ## ◆ Versões
@@ -81,12 +95,17 @@ npm run preview   # serve dist/ para conferência
 | Versão | O que é |
 | --- | --- |
 | **1.2** (esta, no `main`) | Releitura como muro de lambe-lambe, em React, TypeScript, Tailwind e GSAP |
-| 1.1 | Reescrita em React e novas seções inspiradas na página do Premium (branch `v1.1-Teste`) |
-| 1.0 | A primeira versão, em HTML, CSS e Bootstrap 3 (branch `v1.0`) |
+| 1.0 | A primeira versão, em HTML, CSS e Bootstrap 3 (branch [`v1.0`](https://github.com/gabrielnovaesdev/SpotifyRework/tree/v1.0)) |
 
-## ◆ Aviso legal
+## ◆ Observações
 
-Projeto feito apenas para estudo e portfólio, sem vínculo oficial com o Spotify. Marca, nome e identidade visual pertencem à **Spotify AB**.
+- **Projeto educacional.** Feito apenas para estudo e portfólio, sem vínculo oficial com o Spotify. Marca, nome e identidade visual pertencem à **Spotify AB**.
+- **Preços e ofertas são de referência.** Os valores dos planos e o "1 mês grátis" ilustram a página e não valem como oferta real. Os botões de assinatura e download abrem as páginas oficiais do Spotify em outra aba, e a oferta válida é sempre a de lá.
+- **Algumas mídias vêm do servidor de marketing do Spotify.** As fotos da seção "Momentos" são carregadas de lá, e ficam centralizadas em [`src/media.ts`](src/media.ts) para serem trocadas por arquivos próprios sem mexer nos componentes. Se o endereço mudar, essas imagens podem deixar de carregar.
+- **Movimento reduzido.** Com `prefers-reduced-motion: reduce` ativo no sistema, as animações são simplificadas.
+- **Idioma.** Todo o conteúdo está em português do Brasil (`lang="pt-br"`).
+- **Gravador de movimento.** [`tools/motion-recorder`](tools/motion-recorder/README.md) é uma ferramenta de apoio ao desenvolvimento (Node 22 ou superior e Chrome/Edge). Ela não faz parte do site, e as gravações vão para `.motion/`, que não é versionada.
+- **Versão 1.0.** A versão em HTML puro continua disponível na branch `v1.0`, fora do `main`.
 
 <br>
 
