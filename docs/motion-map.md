@@ -1,0 +1,25 @@
+# Mapa de movimento — referência slush.app → Muro de Lambe-lambe (v1.2)
+
+Referência gravada com `tools/motion-recorder` (CDP screencast, ~62–72 fps, 1440x900),
+gravações em `.motion/slushapp-desktop` (percurso de scroll) e `.motion/slushapp-ix` (interações).
+Tempos medidos nos frames (estimativa visual, ±1 frame ≈ ±16 ms).
+
+Tipos: **S** = ligado à posição do scroll · **R** = revelação ao entrar na tela · **L** = loop ambiente · **U** = acionado pelo usuário.
+
+| # | Padrão na Slush | Gatilho / tipo | Início → fim, retorno | Medido (estimativa) | Recebe no nosso projeto | Teste |
+|---|---|---|---|---|---|---|
+| 1 | Faixa de anúncio contínua acima do header | L | translateX contínuo, sem salto; não interativo além do link | ~40 px/s, loop fechado | `AnnounceBar`: "Premium: 1 mês por R$ 0" → `#planos` (um link só) | 1 volta completa sem costura; sem overflow global |
+| 2 | Entrada do hero: título "SLUSH" fatiado letra a letra, ilustrações pulam, frase entra por palavras, CTAs | U (load), timeline | título visível no SSR; fatias saem/entram ~1,0 s; ilustrações escalonadas; frase palavra a palavra | fatias 1370→2350 ms; ilustrações 60–80 ms entre si; frase ~350 ms por palavra, 100 ms de intervalo | `Hero`: "OUÇA SEM PARAR" em fatias, cartazes em série + mascote pulam, linha de preço, fita | CTA clicável desde o 1º frame; reduzido = estado final |
+| 3 | Parallax e desdobramento: título sobe mais rápido que a arte; painel escuro com 2 celulares sobe e os aparelhos endireitam; depois tipo inclinado grande + QR/ação | S, reversível | arte ~0,5x do texto; celulares de inclinados (~-25°) a retos; volta ao subir | painel cobre a arte entre y≈430 e y≈830 | `HeroUnfold`: painel preto com 2 prints do app (endireitam com o scroll) e composição inclinada "100 MILHÕES DE MÚSICAS / SEM ANÚNCIO NO CAMINHO" + fita | subir e descer no meio do trecho |
+| 4 | Header persistente: cápsulas no topo; ao descer, links recolhem e ficam símbolo, "+" e CTA; ao subir ou no "+", links voltam em cascata; "+"↔"−" | S (direção) + U | recolhe com ~300 ms; volta em cascata da direita p/ esquerda | cascata ~40 ms/link | `Nav`: cápsulas, recolhe ao descer >120 px, amortecimento de 8 px; Esc fecha e devolve o foco | inverter direção sem piscar; teclado |
+| 5 | Painéis arredondados claros/coloridos sobre fundo escuro; faixas escuras de largura total mudam o ritmo | estático | — | — | Cartazes quadrados (identidade: raio 0) sobre o concreto; faixas pretas de largura total nas bandas de CTA e trilhos | diferença intencional: raio 0 |
+| 6 | Blocos editoriais alternados (mídia quadrada + título condensado + texto), título revela por recorte | R | título com recorte + deslocamento, texto e mídia sobrepostos | ~600 ms, 60 ms de intervalo | `Easy`: Navegar / Descobrir / Ouvir em linhas alternadas | celular empilha texto → mídia |
+| 7 | Carrossel central de benefícios com introdução + CTA, vizinhos cortados, bullets, avanço automático | U + L | desliza ~600 ms; avança a cada ~3,3 s | troca 600 ms, intervalo 3300 ms | `BenefitsCarousel`: os 6 benefícios; pausa no hover/foco/toque; botão de pausa | setas, swipe, bullets, pausa |
+| 8 | Duas faixas "GET SLUSH" em sentidos opostos, ilustrações em primeiro plano com parallax | L modulado por S | contínuo; velocidade cresce com o scroll | — | `CtaBands`: "OUÇA SEM PARAR" / "1 MÊS POR R$ 0", mascote em parallax; um CTA estável | volta sem costura; repetição aria-hidden |
+| 9 | Abas: cápsula ativa desliza; imagem, título e texto trocam juntos com sobreposição e deslocamento | U | indicador ~400 ms; título entra da esquerda com desfoque | ~450 ms | `Plans`: tablist com as 4 tirinhas, indicador deslizante, nome/preço/benefícios trocam juntos | tablist/tab/tabpanel, setas, cliques seguidos |
+| 10 | Trilho arrastável de depoimentos: título de um lado, pilha de cards do outro, card sai inclinando e passa para trás | U | arraste com inércia ~700 ms; cards inclinam e encolhem | — | `MomentsRail`: fotos reais de shows (não há depoimentos reais — não inventar) | swipe horizontal, gesto vertical rola a página, botões |
+| 11 | Grade de caminhos/públicos (3 cards coloridos, título grande, ilustração, CTA) | R | entrada em sequência curta | ~60 ms entre cards | `Paths`: Começar grátis (#planos) · Tirar dúvidas (#faq) · Ver o código (GitHub do autor) | proporções iguais |
+| 12 | Trilhos de ícones em sentidos opostos → fechamento modular; faixa de CTA volta no rodapé | L | contínuo | — | `PayRails`: formas de pagamento reais; `Footer` modular com faixa de CTA, redes e aviso educacional | pausa fora da tela |
+| 13 | Transição de rota (home → Get Started): página encolhe num quadro central sobre fundo escuro, 2 painéis coloridos nas laterais em perspectiva, troca de conteúdo, quadro expande; título entra deslizando com desfoque | U | encolhe ~350 ms, segura ~0,9 s, expande ~400 ms | 44,5→46,2 s na gravação | Página única: `FrameJump` nos links marcados (`data-frame`) para seções de destaque; âncora continua funcionando, nova aba/meio-clique intocados | reduzido = salto direto |
+
+Lacunas: não há depoimentos, marcas parceiras nem formulário reais no projeto → nada disso é inventado.

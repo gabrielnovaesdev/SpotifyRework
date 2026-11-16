@@ -1,4 +1,9 @@
 .DS_Store
+node_modules
+dist
+*.tsbuildinfo
+.taste-skill/
+.motion/
 
 # Sistema
 Thumbs.db
