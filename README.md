@@ -82,7 +82,7 @@ npm run preview   # serve dist/ para conferência
 | --- | --- |
 | **1.2** (esta, no `main`) | Releitura como muro de lambe-lambe, em React, TypeScript, Tailwind e GSAP |
 | 1.1 | Reescrita em React e novas seções inspiradas na página do Premium (branch `v1.1-Teste`) |
-| 1.0 | A primeira versão, em HTML, CSS e Bootstrap 3 (tag `v1.0-html-bootstrap`) |
+| 1.0 | A primeira versão, em HTML, CSS e Bootstrap 3 (branch `v1.0`) |
 
 ## ◆ Aviso legal
 
