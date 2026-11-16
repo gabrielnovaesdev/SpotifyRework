@@ -1,93 +1,121 @@
 <div align="center">
 
-<img src=".github/assets/banner.svg" alt="Spotify Premium, releitura: landing page em React e GSAP, versão 1.2" width="100%">
+# 🎵 Clone de Interface do Spotify
 
-<br>
+### Recriação da landing page do Spotify — front-end com HTML, CSS e Bootstrap
 
-<img src="https://img.shields.io/badge/React-19-111111?style=for-the-badge&logo=react&logoColor=61DAFB&labelColor=ffe600" alt="React 19">
-<img src="https://img.shields.io/badge/TypeScript-5-111111?style=for-the-badge&logo=typescript&logoColor=3178C6&labelColor=ffe600" alt="TypeScript 5">
-<img src="https://img.shields.io/badge/Tailwind-4-111111?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4&labelColor=ffe600" alt="Tailwind CSS 4">
-<img src="https://img.shields.io/badge/GSAP-3-111111?style=for-the-badge&logo=greensock&logoColor=0AE448&labelColor=ffe600" alt="GSAP 3">
-<img src="https://img.shields.io/badge/Vite-7-111111?style=for-the-badge&logo=vite&logoColor=646CFF&labelColor=ffe600" alt="Vite 7">
+[![HTML5](https://img.shields.io/badge/HTML5-59%25-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-37.3%25-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-3-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/docs/3.4/)
+[![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?style=flat-square&logo=github)](https://gabrielnovaesdev.github.io/Clone-de-Interface-do-Spotify/)
+[![Uso](https://img.shields.io/badge/Uso-educacional-green?style=flat-square)](#-aviso-legal)
 
-<br>
-
-<sub>
-
-**[Sobre](#-sobre)** &nbsp;·&nbsp; **[Destaques](#-destaques)** &nbsp;·&nbsp; **[Tecnologias](#-tecnologias)** &nbsp;·&nbsp; **[Rodando](#-rodando-localmente)** &nbsp;·&nbsp; **[Estrutura](#-estrutura)** &nbsp;·&nbsp; **[Versões](#-versões)**
-
-</sub>
+**[🚀 Ver Demo ao Vivo](https://gabrielnovaesdev.github.io/Clone-de-Interface-do-Spotify/)**
 
 </div>
 
-<br>
+---
 
-## ◆ Sobre
+## 📋 Sobre o Projeto
 
-Releitura da landing page do **Spotify Premium (Brasil)**, feita como projeto de portfólio para mostrar front-end e movimento. Na versão **1.2**, a página vira um **muro de lambe-lambe**: cada oferta, recurso e plano é um cartaz colado sobre o anterior, com fita, cores fortes (rosa, amarelo e verde) e tipografia de cartaz (Anton e Archivo).
+O **Clone de Interface do Spotify** é uma recriação da landing page do Spotify, desenvolvida com HTML5, CSS e o framework Bootstrap. O projeto reproduz a estrutura visual da plataforma — incluindo navbar, hero section, cards de funcionalidades e rodapé completo — com foco em design responsivo e boas práticas de desenvolvimento front-end.
 
-As decisões de design estão registradas em [`DESIGN.md`](DESIGN.md) e [`PRODUCT.md`](PRODUCT.md); o mapa do sistema de movimento está em [`docs/motion-map.md`](docs/motion-map.md).
+Desenvolvido como projeto de aprendizado: o layout e o estilo foram escritos à mão em HTML e CSS, e o Bootstrap entra com o grid responsivo e o menu que recolhe no celular.
 
-## ◆ Destaques
+---
 
-- **Hero com o símbolo do Spotify em luz** e objetos animados que entram junto com o título
-- **Letras-rolo** e blocos tipográficos que reagem à rolagem
-- **Sistema de movimento** com GSAP (ScrollTrigger e SplitText) e rolagem suave com Lenis
-- **Carrossel de benefícios e faixas** que respondem ao scroll
-- **Planos, FAQ e chamadas finais** no mesmo estilo de cartaz
-- **Acessível:** contraste revisado nos destaques e suporte a `prefers-reduced-motion`
-- **Responsivo**, com animações que pausam fora da tela
+## ✨ Funcionalidades
 
-## ◆ Tecnologias
+- 🎨 **Layout fiel ao Spotify** — navbar, hero, seções de conteúdo e footer
+- 📱 **Design responsivo** — adaptado para diferentes tamanhos de tela
+- 🖼️ **Seção de funcionalidades** — exibição de músicas, playlists e lançamentos
+- 🔍 **Seção "É fácil!"** — buscar, navegar e descobrir músicas
+- 🔗 **Navegação funcional** — menu com links e botões de ação
+- 📲 **Footer completo** — links de company, comunidades e links úteis com ícones de redes sociais
+
+---
+
+## 🚀 Tecnologias Utilizadas
 
 | Tecnologia | Uso |
-| --- | --- |
-| React 19 e TypeScript | Componentes e tipagem |
-| Vite 7 | Servidor de desenvolvimento e build |
-| Tailwind CSS 4 | Estilização e tokens de design |
-| GSAP 3 | Animações e animações de scroll |
-| Lenis | Rolagem suave |
+|---|---|
+| HTML5 | Estruturação semântica das páginas |
+| CSS3 | Estilização, layout e responsividade |
+| JavaScript (Bootstrap + jQuery) | Menu recolhível da navbar em telas pequenas |
+| Bootstrap | Componentes e grid system |
+| GitHub Pages | Hospedagem gratuita do projeto |
 
-## ◆ Rodando localmente
+---
 
-Requer Node.js 20 ou superior.
+## 🏗️ Estrutura do Projeto
+
+```
+Clone-de-Interface-do-Spotify/
+├── index.html        # Página principal
+├── estilo.css        # Estilos customizados
+├── bootstrap/        # Framework CSS
+└── imagens/          # Imagens e ícones do projeto
+```
+
+---
+
+## ⚙️ Como Rodar Localmente
+
+Não é necessário instalar nenhuma dependência — o projeto roda direto no navegador.
 
 ```bash
-git clone https://github.com/gabrielnovaesdev/SpotifyRework.git
-cd SpotifyRework
-npm install
-npm run dev       # http://localhost:5173
-npm run build     # gera a versão de produção em dist/
-npm run preview   # serve dist/ para conferência
+# Clone o repositório
+git clone https://github.com/gabrielnovaesdev/Clone-de-Interface-do-Spotify.git
+
+# Acesse a pasta
+cd Clone-de-Interface-do-Spotify
+
+# Abra no navegador
+start index.html   # Windows
+open index.html    # Mac
 ```
 
-## ◆ Estrutura
+Ou acesse diretamente a **[demo ao vivo](https://gabrielnovaesdev.github.io/Clone-de-Interface-do-Spotify/)**.
 
-```text
-├── index.html
-├── public/                 Imagens, ícones e mídia
-├── docs/                   Mapa de movimento e notas de revisão
-├── tools/motion-recorder/  Grava o movimento da página para análise
-└── src/
-    ├── App.tsx             Montagem das seções
-    ├── components/         Hero, Nav, Plans, Faq, Footer e demais seções
-    ├── hooks/              Lenis, pausa fora da tela, salto de quadros
-    ├── motion.ts           Sistema de movimento
-    └── media.ts            Mídia usada pelas seções
-```
+---
 
-## ◆ Versões
+## 📚 Aprendizados
 
-| Versão | O que é |
-| --- | --- |
-| **1.2** (esta, no `main`) | Releitura como muro de lambe-lambe, em React, TypeScript, Tailwind e GSAP |
-| 1.1 | Reescrita em React e novas seções inspiradas na página do Premium (branch `v1.1-Teste`) |
-| 1.0 | A primeira versão, em HTML, CSS e Bootstrap 3 (branch `v1.0`) |
+Durante o desenvolvimento foram aplicados e consolidados os seguintes conceitos:
 
-## ◆ Aviso legal
+- Estruturação semântica com **HTML5**
+- Estilização avançada e layouts com **CSS3**
+- Uso de **Bootstrap** para grid e componentes responsivos
+- **Responsividade** para múltiplos dispositivos
+- Componentes interativos do Bootstrap, como a navbar recolhível
+- Organização de arquivos em projetos front-end
+- Deploy com **GitHub Pages**
+- Versionamento com **Git e GitHub**
 
-Projeto feito apenas para estudo e portfólio, sem vínculo oficial com o Spotify. Marca, nome e identidade visual pertencem à **Spotify AB**.
+---
 
-<br>
+## 👨‍💻 Desenvolvedor
 
-<div align="center"><sub>Feito por <a href="https://github.com/gabrielnovaesdev">Gabriel Novaes</a></sub></div>
+<div align="center">
+
+**Gabriel Novaes**
+
+Estudante de Análise e Desenvolvimento de Sistemas (ADS) na UniCarioca.
+Apaixonado por desenvolvimento web, mobile e inteligência artificial.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-gabrielnovaesdev-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/gabrielnovaesdev/)
+[![GitHub](https://img.shields.io/badge/GitHub-gabrielnovaesdev-181717?style=flat-square&logo=github)](https://github.com/gabrielnovaesdev)
+
+</div>
+
+---
+
+## 📄 Aviso Legal
+
+Este projeto foi desenvolvido exclusivamente para fins educacionais e de aprendizado, sem qualquer vínculo oficial com o Spotify. Todos os direitos relacionados à marca, nome e identidade visual pertencem à **Spotify AB**.
+
+---
+
+<div align="center">
+  Feito com dedicação por <a href="https://github.com/gabrielnovaesdev">Gabriel Novaes</a>
+</div>
